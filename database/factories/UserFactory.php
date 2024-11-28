@@ -24,10 +24,17 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'name' => fake()->firstName(),
+            'surname' => fake()->lastName(),
+            'patronymic' => fake()->optional()->userName(), //потом спрошу у дармы, как добавить метод, которого нет
+            'birthday' =>fake()->date(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
+            'phone' => fake()->phoneNumber(),
+            'city' => fake()->city(),
+            'region' => fake()->address(), //тоже потом измнить!!!
+            'role_id' => null,
             'remember_token' => Str::random(10),
         ];
     }
