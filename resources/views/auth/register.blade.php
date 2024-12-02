@@ -73,13 +73,14 @@
         </div>
 
         <div class="form-group">
-            <label for="role_id">Роль (необязательно):</label>
-            <select name="role_id">
-                <option value="">Выберите роль</option>
-                <option value="1">Администратор</option>
-                <option value="2">Модератор</option>
-                <option value="3">Пользователь</option>
-            </select>
+            {{--<label for="role_id">Роль (необязательно):</label>--}}
+            <input type="hidden" name="role_id" value="3">
+{{--            <select name="role_id">--}}
+{{--                <option value="">Выберите роль</option>--}}
+{{--                <option value="1">Администратор</option>--}}
+{{--                <option value="2">Модератор</option>--}}
+{{--                <option value="3">Пользователь</option>--}}
+{{--            </select>--}}
         </div>
 
         <button type="submit">Зарегистрироваться</button>
@@ -196,8 +197,9 @@
 
     .links {
         position: absolute;
-        bottom: 20px;
+        bottom: 10px;
         right: 20px;
+
     }
 
     .register-link {
