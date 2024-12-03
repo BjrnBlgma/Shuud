@@ -35,8 +35,25 @@
 
 
 <style>
+    :root {
+        --primary-color: #003357;
+        --secondary-color: #8B4513;
+        --accent-color: #4A90E2;
+        --text-color: #00000;
+        --background-color: #F3EFEA;
+    }
+
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        color: var(--text-color);
+        background-color: var(--background-color);
+    }
+
+
     footer {
-        background-color: #003357;
+        background-color: var(--primary-color);
         color: white;
         padding: 2rem 1rem;
     }
@@ -62,6 +79,10 @@
     .footer-col h3 {
         font-size: 1.2rem;
         margin-bottom: 1rem;
+    }
+
+    .footer-col p {
+        color: white;
     }
 
     .social-links {

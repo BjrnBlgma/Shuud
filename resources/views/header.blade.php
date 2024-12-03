@@ -1,19 +1,21 @@
 <header>
     <div class="header-banner">
         <div class="header-content">
+            <a href="{{ route('main') }}">
             <img src="https://i.pinimg.com/736x/a1/6b/a4/a16ba4b39ed3a448a699ce3d2be0c829.jpg" alt="Логотип Федерации" class="federation-logo">
+            </a>
             <div class="header-titles">
                 <h1>ФЕДЕРАЦИЯ БУРЯТСКОГО ШУУД-ТЕННИСА</h1>
             </div>
             <div class="header-contact">
-                <a href="">info@shuud.ru</a>
+                info@shuud.ru
             </div>
         </div>
     </div>
     <nav class="main-navigation">
         <ul class="nav-menu">
             <li><a href="#about">О Федерации</a></li>
-            <li><a href="#news">Новости</a></li>
+            <li><a href="{{ route('news') }}">Новости</a></li>
             <li><a href="#tournirs">Турниры</a></li>
             <li><a href="#schools">Обучение</a></li>
             <li><a href="#gallery">Медиа</a></li>
@@ -23,7 +25,16 @@
 </header>
 
 
-
+{{--<script>--}}
+{{--    const nav = document.querySelector('.main-navigation');--}}
+{{--    window.addEventListener("scroll", function () {--}}
+{{--        if (window.scrollY > 20) { // Изменено с document.documentElement.scrollTop на window.scrollY--}}
+{{--            nav.classList.add("sticky");--}}
+{{--        } else {--}}
+{{--            nav.classList.remove("sticky");--}}
+{{--        }--}}
+{{--    });--}}
+{{--</script>--}}
 
 <style>
     :root {
@@ -126,4 +137,17 @@
         color: var(--accent-color);
     }
 
+    .sticky {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 999;
+        background-color: var(--primary-color);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .main-navigation.sticky + .news-section {
+        margin-top: 100px; /* Высота вашего header */
+    }
 </style>

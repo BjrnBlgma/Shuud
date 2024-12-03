@@ -10,6 +10,7 @@ class ImageController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'post_id' => 'required|exists:posts,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 

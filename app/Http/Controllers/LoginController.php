@@ -21,7 +21,7 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
-            return redirect()->intended('/');
+            return redirect()->intended('/main');
         }
         return back()->withErrors([
             'email' => 'Неверный email или пароль',

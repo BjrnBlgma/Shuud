@@ -1,82 +1,36 @@
-<header>
-    <div class="header-banner">
-        <div class="header-content">
-            <img src="https://i.pinimg.com/736x/a1/6b/a4/a16ba4b39ed3a448a699ce3d2be0c829.jpg" alt="Логотип Федерации" class="federation-logo">
-            <div class="header-titles">
-                <h1>ФЕДЕРАЦИЯ БУРЯТСКОГО ШУУД-ТЕННИСА</h1>
-            </div>
-            <div class="header-contact">
-                <a href="">info@shuud.ru</a>
-            </div>
-        </div>
-    </div>
-    <nav class="main-navigation">
-        <ul class="nav-menu">
-            <li><a href="#about">О Федерации</a></li>
-            <li><a href="#news">Новости</a></li>
-            <li><a href="#tournirs">Турниры</a></li>
-            <li><a href="#schools">Обучение</a></li>
-            <li><a href="#gallery">Медиа</a></li>
-            <li><a href="#contacts">Контакты</a></li>
-        </ul>
-    </nav>
-</header>
-
+@include('header')
 
 <section class="news-section">
-    <nav>
+    <nav class="nav-news">
     <h2>Новости</h2>
-    <a href="/news" >Все новости &gt;</a>
+    <a href="{{ route('news') }}" >Все новости &gt;</a>
     </nav>
     <div class="news-grid">
         @foreach($posts as $post)
-        <article class="news-item">
-            <img src="{{ $post->images->first()->image ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
-            <h3>{{ $post->title }}</h3>
-            <p>{{ $post->created_at }}</p>
-            <p>{{ $post->content }}</p>
-{{--            <p><?php print_r($post)?></p>--}}
-            <a href="#" class="read-more">Читать далее</a>
-        </article>
+            <article class="news-item">
+                <img src="{{ $post->images->first()->image ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
+                <h3>{{ $post->title }}</h3>
+                <p>{{ $post->created_at }}</p>
+                <p>{{ $post->getShortContent(2) }}</p>
+                <a href="{{ route('posts.show', $post->id) }}" class="read-more">Читать далее</a>
+            </article>
         @endforeach
     </div>
 </section>
 
 
-<footer>
-    <div class="footer-content">
-        <div class="footer-col">
-            <img src="https://i.pinimg.com/736x/a1/6b/a4/a16ba4b39ed3a448a699ce3d2be0c829.jpg" alt="Логотип Федерации" class="footer-logo">
-            <p>РОО "ФБШ-Т (БТ)"</p>
-            <p>Президент - Очиров Дагба Доржибалович</p>
-            <p>Вице-президент - Шотхоев Булат Гармаевич</p>
-            <p>Исполнительный директор - Дамдинов Дашицырен Балданович</p>
-        </div>
-        <div class="footer-col">
-            <h3>Контакты</h3>
-            <p>Адрес: ул. Набережная, д. 17, офис 17, с.Верхняя Иволга, Иволгинский р-н, РБ</p>
-            <p>Время работы: Пн-Пт 10:00-18:00</p>
-        </div>
-        <div class="footer-col">
-            <h3>Социальные сети</h3>
-            <div class="social-links">
-                <a href="#" class="social-link">
-                    <img src="https://i.pinimg.com/736x/bf/ab/dc/bfabdc55969052bf6003b1d46f6a5093.jpg" alt="VK">
-                </a>
-                <a href="#" class="social-link">
-                    <img src="https://i.pinimg.com/736x/5e/39/c0/5e39c0a089b31c1c8cdd6b78ed2c9d58.jpg" alt="YouTube">
-                </a>
-                <a href="#" class="social-link">
-                    <img src="https://i.pinimg.com/736x/57/13/84/5713846d630704ce892f9c93944ba451.jpg" alt="Telegram">
-                </a>
-            </div>
-            <br>
-            <br>
-            <p>© 2024 РOO "ФЕДЕРАЦИЯ БУРЯТСКОГО ШУУД-ТЕННИСА (БЫСТРОГО ТЕННИСА)".</p>
-            <p>Все права защищены.</p>
-        </div>
-    </div>
-</footer>
+@include('footer')
+
+<script>
+    const nav = document.querySelector('.main-navigation');
+    window.addEventListener("scroll", function () {
+        if (window.scrollY > 20) { // Изменено с document.documentElement.scrollTop на window.scrollY
+            nav.classList.add("sticky");
+        } else {
+            nav.classList.remove("sticky");
+        }
+    });
+</script>
 
 <style>
     :root {
@@ -179,6 +133,20 @@
         color: var(--accent-color);
     }
 
+    .sticky {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 999;
+        background-color: var(--primary-color);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .main-navigation.sticky + .news-section {
+        margin-top: 100px; /* Высота вашего header */
+    }
+
     /* News Styles */
     .news-section {
         padding: 4rem 20rem;
@@ -194,13 +162,19 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-gap: 1rem;
+        margin-top: 3rem;
     }
 
     .news-item {
+        display: flex;
+        flex-direction: column; /* Расположить элементы вертикально */
+        justify-content: space-between; /* Пространство между элементами */
+        height: 100%; /* Задать высоту для равномерного распределения */
         background-color: white;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
         border-radius: 5px;
         overflow: hidden;
+        padding-bottom: 1px; /* Добавить отступ для нижнего элемента */
     }
 
     .news-item img {
@@ -221,11 +195,12 @@
     }
 
     .news-item .read-more {
+        margin-top: auto; /* Отправляет ссылку в нижнюю часть карточки */
         display: block;
         background-color: #1c542d;
         color: white;
         text-align: center;
-        text-decoration: darkgreen;
+        text-decoration: none;
         padding: 0.5rem 1rem;
         transition: background-color 0.4s;
     }
@@ -234,7 +209,7 @@
         background-color: #158078;
     }
 
-    nav {
+    .nav-news {
         width: 100%;
         display: flex;
         align-items: center;
@@ -243,7 +218,7 @@
         border-bottom: 2px solid #efefef;
     }
 
-    nav h2 {
+    .nav-news h2 {
         font-size: 3rem;
         text-transform: uppercase;
         margin: 0;
@@ -252,14 +227,16 @@
         transform: translateX(-50%);
     }
 
-    nav a {
+    .nav-news a {
         font-size: 1rem; /* Размер шрифта меньше заголовка */
         color: #1a1a70; /* Темно-синий цвет */
         text-transform: uppercase;
         text-decoration: none;
+        position: absolute;
+        right: 20%;
     }
 
-    nav a:hover {
+    .nav-news a:hover {
         text-decoration: underline;
     }
 
