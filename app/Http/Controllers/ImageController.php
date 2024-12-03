@@ -15,11 +15,17 @@ class ImageController extends Controller
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('Images', 'public');
+//            $filePath = $request->file('image')->store('public/Images');
 
             $image = new Image();
+
             $image->post_id = $request->post_id;
             $image->image = $path;
+//            $image->image = str_replace('public/', '', $filePath);
+
             $image->save();
+
+
 
             return back()->with('success', 'Image uploaded successfully');
         }

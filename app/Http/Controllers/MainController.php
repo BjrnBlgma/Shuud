@@ -10,7 +10,9 @@ class MainController extends Controller
 {
     public function showMainPage()
     {
-        $posts = Post::with('images')->get()->sortByDesc('created_at')->take(3);
+        $postWithImages = Post::with('images')->get();
+        $posts = $postWithImages->sortByDesc('created_at')->take(3);
+//        $posts = Post::with('images')->get()->sortByDesc('created_at')->take(3);
         return view('main', compact('posts'));
     }
 }

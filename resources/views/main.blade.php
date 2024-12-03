@@ -24,12 +24,16 @@
 
 
 <section class="news-section">
+    <nav>
     <h2>Новости</h2>
+    <a href="/news" >Все новости &gt;</a>
+    </nav>
     <div class="news-grid">
         @foreach($posts as $post)
         <article class="news-item">
-            <img src="{{ $post->image }}" alt="Новость 1">
+            <img src="{{ $post->images->first()->image ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
             <h3>{{ $post->title }}</h3>
+            <p>{{ $post->created_at }}</p>
             <p>{{ $post->content }}</p>
 {{--            <p><?php print_r($post)?></p>--}}
             <a href="#" class="read-more">Читать далее</a>
@@ -177,7 +181,7 @@
 
     /* News Styles */
     .news-section {
-        padding: 1rem 20rem;
+        padding: 4rem 20rem;
     }
 
     .news-section h2 {
@@ -228,6 +232,35 @@
 
     .news-item .read-more:hover {
         background-color: #158078;
+    }
+
+    nav {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        border-bottom: 2px solid #efefef;
+    }
+
+    nav h2 {
+        font-size: 3rem;
+        text-transform: uppercase;
+        margin: 0;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    nav a {
+        font-size: 1rem; /* Размер шрифта меньше заголовка */
+        color: #1a1a70; /* Темно-синий цвет */
+        text-transform: uppercase;
+        text-decoration: none;
+    }
+
+    nav a:hover {
+        text-decoration: underline;
     }
 
     /* Footer Styles */
