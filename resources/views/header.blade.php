@@ -25,16 +25,16 @@
 </header>
 
 
-{{--<script>--}}
-{{--    const nav = document.querySelector('.main-navigation');--}}
-{{--    window.addEventListener("scroll", function () {--}}
-{{--        if (window.scrollY > 20) { // Изменено с document.documentElement.scrollTop на window.scrollY--}}
-{{--            nav.classList.add("sticky");--}}
-{{--        } else {--}}
-{{--            nav.classList.remove("sticky");--}}
-{{--        }--}}
-{{--    });--}}
-{{--</script>--}}
+<script>
+    const nav = document.querySelector('.main-navigation');
+    window.addEventListener("scroll", function () {
+        if (window.scrollY > 20) { // Изменено с document.documentElement.scrollTop на window.scrollY
+            nav.classList.add("sticky");
+        } else {
+            nav.classList.remove("sticky");
+        }
+    });
+</script>
 
 <style>
     :root {
@@ -56,7 +56,7 @@
     /* Header Styles */
     .header-banner {
         width: 100%;
-        height: 130px;
+        height: 110px;
         background: #F3EFEA;
         display: flex;
         align-items: center;
@@ -109,7 +109,7 @@
 
     .main-navigation {
         background-color: var(--primary-color);
-        padding: 2rem 0;
+        padding: 1.2rem 0;
     }
 
     .nav-menu {

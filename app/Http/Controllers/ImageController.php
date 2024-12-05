@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Image;
@@ -16,20 +15,20 @@ class ImageController extends Controller
 
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('Images', 'public');
-//            $filePath = $request->file('image')->store('public/Images');
 
             $image = new Image();
-
             $image->post_id = $request->post_id;
             $image->image = $path;
-//            $image->image = str_replace('public/', '', $filePath);
-
             $image->save();
 
-
-
-            return back()->with('success', 'Image uploaded successfully');
+            return redirect()->route('news')->with('success', 'Новость успешно добавлена!');
         }
         return back()->with('error', 'Image upload failed, try again later');
+        // ошибка была из-за того, что я не добавила enctype="multipart/form-data" в форму отправки во вьюшке:(
+    }
+
+    public function showCreateImageForm()
+    {
+        return view("fileUploads");
     }
 }

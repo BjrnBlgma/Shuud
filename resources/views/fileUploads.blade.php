@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Добавить новость</title>
+    <title>Добавить изображение</title>
 
     <!-- Подключение CSS -->
     <link rel="stylesheet" href="styles.css">
@@ -16,37 +16,14 @@
 <div class="container py-4">
     <div class="form-container">
 
-        <!-- Форма -->
-        <form action="{{ route('create-post') }}" method="post" class="add-post-form" enctype="multipart/form-data">
-            @csrf <!-- CSRF-токен -->
+        <form action="{{ route('images.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <label for="post_id">Post ID:</label>
+            <input type="number" name="post_id" id="post_id" required>
 
-            <h3 class="form-title">Добавить новость</h3>
+            <label for="image">Upload Image:</label>
+            <input type="file" name="image" id="image" value="{{ old('image') }}" required>
 
-            <div class="form-group">
-                <label for="newsTitle" class="form-label">Заголовок</label>
-                <input type="text" class="form-control" id="title" name="title" placeholder="Введите заголовок" value="{{ old('title') }}">
-            </div>
-
-            <div class="form-group">
-                <label for="newsText" class="form-label">Текст</label>
-                <textarea class="form-control" id="content" rows="5" name="content" placeholder="Введите текст">{{ old('content') }}</textarea>
-            </div>
-
-            <input type="hidden" name="author_id" value="{{ $userId }}">
-
-            <div class="form-group">
-                <label for="postTypeId" class="form-label">Тип поста</label>
-                <select id="post_type_id" name="post_type_id" class="form-control">
-                    <option value="1" {{ old('post_type_id') == 1 ? 'selected' : '' }}>Новости</option>
-                    <option value="2" {{ old('post_type_id') == 2 ? 'selected' : '' }}>Турнир</option>
-                    <option value="3" {{ old('post_type_id') == 3 ? 'selected' : '' }}>Медиа</option>
-                </select>
-            </div>
-
-            <label for="image">Добавить изображение:</label>
-            <input type="file" name="image" id="image" value="{{ old('image') }}"  required>
-
-            <!-- Вывод ошибок -->
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -57,7 +34,7 @@
                 </div>
             @endif
 
-            <button type="submit" class="btn btn-primary">Создать пост</button>
+            <button type="submit">Upload</button>
         </form>
     </div>
 </div>

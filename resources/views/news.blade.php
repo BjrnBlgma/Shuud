@@ -8,9 +8,14 @@
     <div class="news-grid">
         @foreach($posts as $post)
             <article class="news-item">
-                <img src="{{ $post->images->first()->image ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
+                @if($post->images->isNotEmpty())
+                    <img src="{{ asset('storage/' . $post->images->first()->image) }}" alt="Image">
+                @else
+                    <img src="{{ asset('storage/Images/default.jpg') }}" alt="Новость"> {{-- Изображение по умолчанию --}}
+                @endif
+
                 <h3>{{ $post->title }}</h3>
-                <p>{{ $post->created_at }}</p>
+                <p>{{ $post->created_at->format('d.m.Y H:i') }}</p>
                 <p>{{ $post->getShortContent(2) }}</p>
                 <a href="{{ route('posts.show', $post->id) }}" class="read-more">Читать далее</a>
             </article>

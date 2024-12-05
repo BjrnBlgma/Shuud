@@ -22,6 +22,16 @@ class Post extends Model
         return $this->hasMany( \App\Models\Image::class, 'post_id', 'id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'author_id', 'id');
+    }
+
+    public function post_types()
+    {
+        return $this->belongsTo(PostType::class, 'post_type_id', 'id');
+    }
+
     public function getShortContent($sentenceCount = 3)
     {
         $sentences = preg_split('/([.!?])\s/', $this->content, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);

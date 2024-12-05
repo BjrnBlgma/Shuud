@@ -13,10 +13,10 @@
 <body>
 <div class="container py-4">
     @if(!empty($post->images->first()->image))
-    <img src="{{ $post->images->first()->image ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
+        <img src="{{ asset('storage/' . $post->images->first()->image) ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
     @endif
     <h2>{{ $post->title }}</h2>
-    <p>{{ $post->created_at }}</p>
+    <p>{{ $post->created_at->format('d.m.Y H:i') }}</p>
 
     @foreach (explode("\n", $post->content) as $paragraph)
         <p>{{ $paragraph }}</p>

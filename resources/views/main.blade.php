@@ -8,9 +8,9 @@
     <div class="news-grid">
         @foreach($posts as $post)
             <article class="news-item">
-                <img src="{{ $post->images->first()->image ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
+                <img src="{{ asset('storage/' . $post->images->first()->image) ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
                 <h3>{{ $post->title }}</h3>
-                <p>{{ $post->created_at }}</p>
+                <p>{{ $post->created_at->format('d.m.Y H:i') }}</p>
                 <p>{{ $post->getShortContent(2) }}</p>
                 <a href="{{ route('posts.show', $post->id) }}" class="read-more">Читать далее</a>
             </article>
@@ -49,103 +49,7 @@
         background-color: var(--background-color);
     }
 
-    /* Header Styles */
-    .header-banner {
-        width: 100%;
-        height: 130px;
-        background: #F3EFEA;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #23346e;
-    }
 
-    .header-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        width: 100%;
-        max-width: 1200px;
-    }
-
-    .federation-logo {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-    }
-
-    .header-titles {
-        text-align: center;
-    }
-
-    .header-titles h1 {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .header-titles h2 {
-        font-size: 1.2rem;
-        font-weight: normal;
-        color: var(--primary-color);
-    }
-
-    .header-contact a {
-        color: #23346e;
-        text-decoration: none;
-        font-size: 1rem;
-        opacity: 0.8;
-        transition: opacity 0.5s;
-    }
-
-    .header-contact a:hover {
-        opacity: 1;
-    }
-
-    .main-navigation {
-        background-color: var(--primary-color);
-        padding: 2rem 0;
-    }
-
-    .nav-menu {
-        display: flex;
-        justify-content: center;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .nav-menu li {
-        margin: 0 4rem;
-    }
-
-    .nav-menu a {
-        color: white;
-        text-decoration: none;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        font-size: 1.2rem;
-        transition: color 0.3s;
-    }
-
-    .nav-menu a:hover {
-        color: var(--accent-color);
-    }
-
-    .sticky {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 999;
-        background-color: var(--primary-color);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .main-navigation.sticky + .news-section {
-        margin-top: 100px; /* Высота вашего header */
-    }
 
     /* News Styles */
     .news-section {
