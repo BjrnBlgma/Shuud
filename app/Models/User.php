@@ -59,4 +59,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'role_id');
     }
+
+    public function tournaments()
+    {
+        return $this->hasMany(Tournament::class, 'created_user_id', 'id');
+    }
 }

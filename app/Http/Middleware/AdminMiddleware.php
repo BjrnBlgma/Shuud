@@ -16,9 +16,10 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->user()) {
+        $user = auth()->user();
+        if (!$user) {
             return redirect('/login');
-        }elseif (!User::with('role')->get('role_id') == 'Администратор') {
+        }elseif ($user->role->name !== 'Администратор') {
             return redirect('/')->with('error', 'У вас нет доступа к этой странице.');
         }
         return $next($request);

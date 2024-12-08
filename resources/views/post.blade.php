@@ -12,8 +12,18 @@
 </head>
 <body>
 <div class="container py-4">
-    @if(!empty($post->images->first()->image))
-        <img src="{{ asset('storage/' . $post->images->first()->image) ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
+
+    @if(!empty($post->images))
+    <div class="carousel">
+        <div class="carousel-inner">
+            @foreach($post->images as $images)
+            <div class="carousel-item">
+                <img src="{{ asset('storage/' . $images->image) ?? 'путь_по_умолчанию.jpg' }}"  alt="Image 1">
+            </div>
+            @endforeach
+        </div>
+    </div>
+{{--        alt="Новость 1">--}}
     @endif
     <h2>{{ $post->title }}</h2>
     <p>{{ $post->created_at->format('d.m.Y H:i') }}</p>
@@ -26,6 +36,32 @@
 </html>
 
 @include('footer')
+
+
+<script>
+    let currentIndex = 0;
+    const carouselItems = document.querySelectorAll('.carousel-item');
+
+    function goToSlide(index) {
+        if (index &lt; 0) {
+            index = carouselItems.length - 1;
+        } else if (index &gt;= carouselItems.length) {
+            index = 0;
+        }
+        currentIndex = index;
+        document.querySelector('.carousel-inner').style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+
+    function goToNextSlide() {
+        goToSlide(currentIndex + 1);
+    }
+
+    function goToPrevSlide() {
+        goToSlide(currentIndex - 1);
+    }
+
+    setInterval(goToNextSlide, 5000);
+</script>
 
 
 <style>
@@ -43,8 +79,31 @@
         margin: 0 auto;
         padding: 2rem;
     }
-    img{
+    /*img{*/
+    /*    width: 50%;*/
+    /*}*/
+
+    .carousel {
+        position: relative;
         width: 100%;
+        overflow: hidden;
+    }
+
+    .carousel-inner {
+        display: flex;
+        width: 100%;
+        transition: transform 0.5s;
+    }
+
+    .carousel-item {
+        flex: 1;
+        text-align: center;
+    }
+
+    .carousel-item img {
+        width: 100%;
+        max-height: 800px;
+        object-fit: cover;
     }
 
     h2 {

@@ -7,7 +7,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 
-class Upload
+trait Upload
 {
     public function UploadFile(UploadedFile $file, $folder = null, $disk = 'public', $filename = null)
     {

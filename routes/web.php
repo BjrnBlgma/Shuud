@@ -34,6 +34,16 @@ Route::post('/images', [ImageController::class, 'store'])->name('images.store');
 //    Route::get('/admin', [AdminController::class, 'showAdminPage'])->name('admin');
 //});
 
-Route::get('admin', [AdminController::class, 'showAdminPage'])->name('admin');
+
+Route::get('/admin', [AdminController::class, 'showAdminPageAndAllNews'])->name('admin');
+Route::get('/admin-tournaments-list', [AdminController::class, 'showAllTournaments'])->name('tournaments-list');
+
 Route::get('/create-post', [AdminController::class, 'showCreatePostForm'])->name('create-post');
 Route::post('/create-post', [AdminController::class, 'submitPost'])->name('create-post');
+
+Route::get('/add-tournament', [AdminController::class, 'showAddTournamentForm'])->name('add-tournament');
+Route::post('/add-tournament', [AdminController::class, 'addTournament'])->name('add-tournament');
+
+Route::get('/edit-post/{id}', [AdminController::class, 'showEditPostForm'])->name('edit-post');
+Route::post('/edit-post/{id}', [AdminController::class, 'updatePost'])->name('edit-post');
+Route::get('/delete-post/{id}', [AdminController::class, 'deletePost'])->name('delete-post');

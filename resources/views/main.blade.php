@@ -8,7 +8,11 @@
     <div class="news-grid">
         @foreach($posts as $post)
             <article class="news-item">
-                <img src="{{ asset('storage/' . $post->images->first()->image) ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
+                @if(!empty($post->images))
+                    @foreach($post->images as $images)
+                <img src="{{ asset('storage/' . $images->image) ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
+                    @endforeach
+                @endif
                 <h3>{{ $post->title }}</h3>
                 <p>{{ $post->created_at->format('d.m.Y H:i') }}</p>
                 <p>{{ $post->getShortContent(2) }}</p>

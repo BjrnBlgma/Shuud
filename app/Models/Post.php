@@ -27,14 +27,14 @@ class Post extends Model
         return $this->belongsTo(User::class, 'author_id', 'id');
     }
 
-    public function post_types()
+    public function postType()
     {
         return $this->belongsTo(PostType::class, 'post_type_id', 'id');
     }
 
     public function getShortContent($sentenceCount = 3)
     {
-        $sentences = preg_split('/([.!?])\s/', $this->content, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $sentences = preg_split('/([.!?:])\s/', $this->content, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         $shortContent = '';
 
         for ($i = 0; $i < $sentenceCount * 2 && $i < count($sentences); $i += 2) {

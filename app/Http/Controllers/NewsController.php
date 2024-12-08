@@ -42,7 +42,7 @@ class NewsController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'author_id' => 'required|integer|max:255',
-            'post_type_id' => 'required|string|max:255',
+            'post_type_id' => 'required|integer|max:255',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         try {
