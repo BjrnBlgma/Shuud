@@ -8,12 +8,10 @@
             <div class="formHeader row">
                 <h2 class="text-1 fl">Список постов</h2>
                 <div class="fr">
-                    <a href="{{ route('create-post', ['section' => 1]) }}" class="btnAdd fa fa-plus bg-1 text-fff">
-                        СОЗДАТЬ НОВОСТЬ</a>
-                    <a href="{{ route('create-post', ['section' => 3]) }}" class="btnAdd fa fa-plus bg-1 text-fff">
-                        СОЗДАТЬ МЕДИА</a>
-                    <a href="{{ route('create-post', ['section' => 2]) }}" class="btnAdd fa fa-plus bg-1 text-fff">
-                        СОЗДАТЬ ПОЛОЖЕНИЕ ТУРНИРА</a>
+{{--                    <a href="{{ route('create-post', ['section' => 1]) }}" class="btnAdd fa fa-plus bg-1 text-fff">--}}
+{{--                        СОЗДАТЬ НОВОСТЬ</a>--}}
+{{--                    <a href="{{ route('create-post', ['section' => 3]) }}" class="btnAdd fa fa-plus bg-1 text-fff">--}}
+{{--                        СОЗДАТЬ МЕДИА</a>--}}
                     {{--                    <button type="submit" class="btnSave bg-1 text-fff text-bold fr">Сохранить</button>--}}
                     {{--                    <a href="" class="btnAdd fa fa-plus bg-1 text-fff"></a>--}}
                 </div>
@@ -21,8 +19,8 @@
             <div class="table" id="site-content">
                 <div class="row bg-1" id="site-content">
                     <div class="cell cell-50 text-center text-fff">ID</div>
-                    <div class="cell cell-100 text-center text-fff">Тип поста</div>
-                    <div class="cell cell-100 text-fff">Изображение</div>
+{{--                    <div class="cell cell-100 text-center text-fff">Тип поста</div>--}}
+{{--                    <div class="cell cell-100 text-fff">Изображение</div>--}}
                     <div class="cell cell-100p text-fff">Заголовок</div>
                     <div class="cell cell-100p text-fff">Автор</div>
                     <div class="cell cell-100p text-fff">Дата создания</div>
@@ -32,17 +30,19 @@
                 </div>
                 <!--   BEGIN LOOP -->
                 <ul>
-                    @foreach($allPosts as $post)
+                    @foreach($allCompetitions as $post)
                         <li class="row" id="site-content">
                             <div class="cell cell-50 text-center">{{$post->id}}</div>
-                            <div class="cell cell-100 text-center">{{$post->postType->name ?? 'Тип не задан'}}</div>
+{{--                            <div class="cell cell-100 text-center">турнир</div>--}}
                             @if(!empty($post->files))
                                 <div class="cell cell-100 text-center">
-                                        <a href=""><img src="{{asset('storage/' . $post->files->first()->image) }}" alt=""
+                                    @foreach($post->files as $file)
+                                        <a href=""><img src="{{asset('storage/' . $file->image)}}" alt=""
                                                         width="50"></a>
+                                    @endforeach
                                 </div>
                             @endif
-                            <div class="cell cell-100p"><a href="">{{ $post->title }}</a></div>
+                            <div class="cell cell-100p"><a href="">{{ $post->name }}</a></div>
                             <div class="cell cell-100p"><a
                                     href="">{{$post->user->surname ?? ''}} {{$post->user->name ?? ''}}</a></div>
                             <div class="cell cell-100p text-fff">{{ $post->created_at->format('d.m.Y H:i') }}</div>

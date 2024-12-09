@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Image extends Model
+class File extends Model
 {
-    protected $table = 'images';
+    protected $table = 'files';
     protected $fillable = ['post_id', 'image'];
 
     public function post()

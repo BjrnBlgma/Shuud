@@ -8,8 +8,8 @@
     <div class="news-grid">
         @foreach($posts as $post)
             <article class="news-item">
-                @if($post->images->isNotEmpty())
-                    <img src="{{ asset('storage/' . $post->images->first()->image) }}" alt="Image">
+                @if($post->files->isNotEmpty())
+                    <img src="{{ asset('storage/' . $post->files->first()->image) }}" alt="Image">
                 @else
                     <img src="{{ asset('storage/Images/default.jpg') }}" alt="Новость"> {{-- Изображение по умолчанию --}}
                 @endif

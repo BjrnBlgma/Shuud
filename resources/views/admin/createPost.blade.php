@@ -17,9 +17,10 @@
             </div>
 
             <div class="twothirds">
-                <label for="image">Добавить изображение:</label>
-                <input type="file" name="image" id="image">
+                <label for="images">Добавить изображение:</label>
+                <input type="file" name="image[]" id="images" multiple>
                 <button type="submit" name="submit">Создать</button>
+                <button type="button" class="btn btn-primary" onclick="window.history.back();">Отмена</button>
             </div>
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -131,5 +132,11 @@
         -moz-border-radius: 0.5em;
         -ms-border-radius: 0.5em;
         border-radius: 0.5em;
+    }
+    form button[type="button"]{
+        background-color: #6c757d;
+        color: white;
+        margin-left: 30px;
+
     }
 </style>

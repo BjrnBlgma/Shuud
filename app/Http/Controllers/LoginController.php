@@ -34,6 +34,21 @@ class LoginController extends Controller
     }
 
 
+    public function checkAuth()
+    {
+        if (auth()->user()) {
+            $user = auth()->user();
+            $admin = User::with("role")->findOrFail($user->id);
+            if ($admin->role->name == 'Администратор') {
+                return redirect()->route('admin');
+            } else {
+                return redirect()->route('main');
+            }
+        }
+        return redirect()->route('login');
+    }
+
+
     public function logout(Request $request)
     {
         Auth::logout();

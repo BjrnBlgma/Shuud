@@ -2,7 +2,7 @@
     <h1>Admin Panel</h1>
     <ul class="utilities">
         <br>
-        <li class="logout warn"><a href="">Выйти</a></li>
+        <li class="logout warn"><a href="{{ route('logout') }}">Выйти</a></li>
     </ul>
 </header>
 
@@ -14,17 +14,17 @@
     <ul class="main">
         <li class="dashboard"><a href="">Dashboard</a></li>
         <li class="cup"><a href="{{ route('add-tournament') }}">Создать соревнование</a></li>
-        <li class="postList"><a href="{{ route('admin') }}">Список новостей</a></li>
-{{--        <li class="competitionsList"><a href="{{ route('tournaments-list') }}">Список турниров</a></li>--}}
+        <li class="postList"><a href="{{ route('admin') }}">Список постов</a></li>
+        <li class="competitionsList"><a href="{{ route('tournaments-list') }}">Список турниров</a></li>
 {{--        <li class="mediaList"><a href="{{ route('admin') }}">Список медиапостов</a></li>--}}
-        <li class="write dropdown">
-            <a href="#">Создать</a>
-            <ul class="dropdown-menu">
-                <li><a href="{{ route('create-post', ['section' => 1]) }}">Новости</a></li>
-                <li><a href="{{ route('create-post', ['section' => 2]) }}">Положение турнира</a></li>
-                <li><a href="{{ route('create-post', ['section' => 3]) }}">Медиа</a></li>
-            </ul>
-        </li>
+{{--        <li class="write dropdown">--}}
+{{--            <a href="#">Создать</a>--}}
+{{--            <ul class="dropdown-menu">--}}
+{{--                <li><a href="{{ route('create-post', ['section' => 1]) }}">Создать новость</a></li>--}}
+{{--                <li><a href="{{ route('create-post', ['section' => 2]) }}">Создать положение турнира</a></li>--}}
+{{--                <li><a href="{{ route('create-post', ['section' => 3]) }}">Созлать медиа</a></li>--}}
+{{--            </ul>--}}
+{{--        </li>--}}
         <li class="comments"><a href="">Реклама</a></li>
         <li class="users"><a href="">Управление пользователями</a></li>
         <li class="edit"><a href="">Редактировать сайт</a></li>

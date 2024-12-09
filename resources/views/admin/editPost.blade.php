@@ -10,12 +10,12 @@
                 @endforeach
             </div>
 
-            @if(!empty($post->images))
+            @if(!empty($post->files))
                 <div class="post-images">
 
-                    @foreach($post->images as $image)
+                    @foreach($post->files as $file)
                         <div class="image-container">
-                            <img src="{{ asset('storage/' . $image->image) }}" alt="Post Image" class="post-image">
+                            <img src="{{ asset('storage/' . $file->image) }}" alt="Post Image" class="post-image">
                         </div>
                     @endforeach
                 </div>
@@ -26,50 +26,48 @@
     </section>
 
 
-
     <section id="edit-form" class="edit-form" style="display: none;">
         <form action="{{ route('edit-post', $post->id) }}" method="post" class="add-post-form" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="author_id" value="{{ $post->author_id }}">
             <input type="hidden" name="post_id" value="{{ $post->id }}">
 
-        <div class="edit-section">
-            <label for="edit-title">Заголовок:</label>
-            <input type="text" id="edit-title" name="title" value="{{ $post->title }}" >
-        </div>
-
-        <div class="edit-section">
-            <label for="edit-content">Содержание:</label>
-            <textarea id="edit-content" name="content">{{ $post->content }}</textarea>
-        </div>
-
-        <div class="edit-section image-edit">
-            <label>Изображения:</label>
-            <div class="current-images">
-                @if(!empty($post->images))
-                    @foreach($post->images as $index => $image)
-                        <div class="image-container">
-                            <img src="{{ asset('storage/' . $image->image) }}" alt="Post Image">
-                            <button class="remove-image-btn" data-index="{{ $index }}">✕</button>
-                        </div>
-                    @endforeach
-                @endif
+            <div class="edit-section">
+                <label for="edit-title">Заголовок:</label>
+                <input type="text" id="edit-title" name="title" value="{{ $post->title }}">
             </div>
 
-
-            <div class="image-upload">
-                <input type="file" id="image-upload" name="images[]" multiple accept="image/*">
-                <label for="image-upload" class="upload-btn">Добавить фотографии</label>
+            <div class="edit-section">
+                <label for="edit-content">Содержание:</label>
+                <textarea id="edit-content" name="content">{{ $post->content }}</textarea>
             </div>
-        </div>
 
-        <div class="edit-actions">
-            <button id="save-changes-btn" class="primary-btn">Сохранить изменения</button>
-            <button id="cancel-edit-btn" class="secondary-btn">Отмена</button>
-        </div>
+            <div class="edit-section image-edit">
+                <label>Изображения:</label>
+                <div class="current-images">
+                    @if(!empty($post->files))
+                        @foreach($post->files as $file)
+                            <div class="image-container" data-file-id="{{ $file->id }}">
+                                <img src="{{ asset('storage/' . $file->image) }}" alt="Post Image">
+                                <button type="button" class="remove-image-btn" data-file-id="{{ $file->id }}">✕</button>
+                            </div>
+                        @endforeach
+                    @endif
+                </div>
 
+                <div class="image-upload">
+                    <input type="file" id="image-upload" name="image[]" multiple accept="image/*">
+                    <label for="image-upload" class="upload-btn">Добавить фотографии</label>
+                </div>
+            </div>
+
+            <input type="hidden" name="deleted_images" id="deleted-images-input" value="">
+
+            <div class="edit-actions">
+                <button type="submit" id="save-changes-btn" class="primary-btn">Сохранить изменения</button>
+                <button type="button" id="cancel-edit-btn" class="secondary-btn">Отмена</button>
+            </div>
         </form>
-
     </section>
 </main>
 
@@ -77,51 +75,64 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const editToggleBtn = document.getElementById('edit-toggle-btn');
-        const editForm = document.getElementById('edit-form');
+        const editForm = document.querySelector('.add-post-form');
+        const editFormSection = document.getElementById('edit-form');
         const cancelEditBtn = document.getElementById('cancel-edit-btn');
-        const saveChangesBtn = document.getElementById('save-changes-btn');
         const imageUpload = document.getElementById('image-upload');
         const currentImagesContainer = document.querySelector('.current-images');
+        const deletedImagesInput = document.getElementById('deleted-images-input');
 
+        // Множество для отслеживания удаляемых изображений
+        const imagesToDelete = new Set();
+
+        // Toggle edit mode
         editToggleBtn.addEventListener('click', () => {
             document.querySelector('.post-view').style.display = 'none';
-            editForm.style.display = 'block';
+            editFormSection.style.display = 'block';
         });
 
+        // Cancel edit mode
         cancelEditBtn.addEventListener('click', () => {
             document.querySelector('.post-view').style.display = 'block';
-            editForm.style.display = 'none';
+            editFormSection.style.display = 'none';
         });
 
-        // Image removal functionality
+        // Обработчик удаления изображений
         currentImagesContainer.addEventListener('click', (e) => {
             if (e.target.classList.contains('remove-image-btn')) {
-                e.target.closest('.image-container').remove();
+                const imageContainer = e.target.closest('.image-container');
+                const imageId = imageContainer.dataset.fileId;
+
+                if (imageId) {
+                    // Добавляем или удаляем идентификатор из списка
+                    imagesToDelete.add(imageId);
+
+                    // Удаляем контейнер изображения
+                    imageContainer.remove();
+
+                    // Обновляем скрытое поле для передачи удаляемых изображений
+                    deletedImagesInput.value = JSON.stringify(Array.from(imagesToDelete));
+                }
             }
         });
 
-        // Image preview on upload
+        // Превью новых изображений
         imageUpload.addEventListener('change', (e) => {
             const files = e.target.files;
             for (let file of files) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     const imageContainer = document.createElement('div');
-                    imageContainer.classList.add('image-container');
+                    imageContainer.classList.add('image-container', 'new-image');
                     imageContainer.innerHTML = `
-                    <img src="${event.target.result}" alt="New Image">
-                    <button class="remove-image-btn">✕</button>
+                    <img src="${event.target.result}" alt="Новое изображение">
+                    <button type="button" class="remove-image-btn">✕</button>
                 `;
                     currentImagesContainer.appendChild(imageContainer);
                 };
                 reader.readAsDataURL(file);
             }
-        });
 
-
-        saveChangesBtn.addEventListener('click', () => {
-            const form = document.getElementById('edit-post-form');
-            form.submit();
         });
     });
 </script>
@@ -142,7 +153,7 @@
         max-width: 800px;
         background-color: white;
         border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         padding: 20px;
     }
 
@@ -246,7 +257,7 @@
         position: absolute;
         top: 5px;
         right: 5px;
-        background-color: rgba(255,0,0,0.7);
+        background-color: rgba(255, 0, 0, 0.7);
         color: white;
         border: none;
         border-radius: 50%;

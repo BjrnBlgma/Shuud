@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Image;
+use App\Models\File;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +11,7 @@ class NewsController extends Controller
 {
     public function showNews()
     {
-        $postWithImages = Post::with('images')->get();
+        $postWithImages = Post::with('files')->get();
         $posts = $postWithImages->sortByDesc('created_at');
 //        $posts = Post::with('images')->get()->sortByDesc('created_at')->take(3);
         return view('news', compact('posts'));
@@ -19,7 +19,7 @@ class NewsController extends Controller
 
     public function showPost($id)
     {
-        $post = Post::with('images')->findOrFail($id);
+        $post = Post::with('files')->findOrFail($id);
         return view('post', compact('post'));
     }
 
@@ -57,7 +57,7 @@ class NewsController extends Controller
                 if ($request->hasFile('image')) {
                     $path = $request->file('image')->store('Images', 'public');
 
-                    Image::create([
+                    File::create([
                         'post_id' => $post->id,
                         'image' => $path,
                     ]);

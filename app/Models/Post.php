@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Faker\Provider\Image;
 use Illuminate\Database\Eloquent\Model;
 use function PHPUnit\Framework\returnSelf;
+use Illuminate\Support\Facades\Storage;
 
 class Post extends Model
 {
@@ -17,9 +17,21 @@ class Post extends Model
         'post_type_id'
     ];
 
-    public function images()
+    public function files()
     {
-        return $this->hasMany( \App\Models\Image::class, 'post_id', 'id');
+        return $this->hasMany( File::class, 'post_id', 'id');
+    }
+
+    protected static function booted()
+    {
+        static::deleting(function ($post) {
+            // Удаляем физические файлы
+            foreach ($post->files as $file) {
+                if (Storage::disk('public')->exists($file->image)) {
+                    Storage::disk('public')->delete($file->image);
+                }
+            }
+        });
     }
 
     public function user()

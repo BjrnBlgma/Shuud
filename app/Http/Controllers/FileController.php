@@ -1,11 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Image;
+use App\Models\File;
 use Illuminate\Http\Request;
 use App\Traits\Upload;
 
-class ImageController extends Controller
+class FileController extends Controller
 {
     use Upload;//add this trait
 
@@ -25,7 +25,7 @@ class ImageController extends Controller
                 ]);
             }
             foreach ($file_details as $key => $value) {
-                Image::create([
+                File::create([
                     'post_id' => 'required|exists:posts,id',
                     'path' => $value
                 ]);
