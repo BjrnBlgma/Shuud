@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use App\Models\Post;
+use App\Models\PostFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -11,7 +12,7 @@ class NewsController extends Controller
 {
     public function showNews()
     {
-        $postWithImages = Post::with('files')->get();
+        $postWithImages = Post::with('postFile.file')->get();
         $posts = $postWithImages->sortByDesc('created_at');
 //        $posts = Post::with('images')->get()->sortByDesc('created_at')->take(3);
         return view('news', compact('posts'));
@@ -19,7 +20,7 @@ class NewsController extends Controller
 
     public function showPost($id)
     {
-        $post = Post::with('files')->findOrFail($id);
+        $post = Post::with('postFile.file')->findOrFail($id);
         return view('post', compact('post'));
     }
 
@@ -43,7 +44,8 @@ class NewsController extends Controller
             'content' => 'required|string',
             'author_id' => 'required|integer|max:255',
             'post_type_id' => 'required|integer|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|array', // Проверяем, что пришёл массив
+            'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Проверка каждого изображения
         ]);
         try {
             DB::transaction(function () use ($validated, $request) {
@@ -55,12 +57,20 @@ class NewsController extends Controller
                 ]);
 
                 if ($request->hasFile('image')) {
-                    $path = $request->file('image')->store('Images', 'public');
+                    foreach ($request->file('image') as $imageFile) {
+                        $path = $imageFile->store('Images', 'public');
+                        if (!$path) { // Проверяем, успешно ли сохранён файл
+                            throw new \Exception('Ошибка при сохранении файла.');
+                        }
+                        $image = File::create([
+                            'path' => $path,
+                        ]);
 
-                    File::create([
-                        'post_id' => $post->id,
-                        'image' => $path,
-                    ]);
+                        PostFile::create([
+                            'post_id' => $post->id,
+                            'file_id' => $image->id,
+                        ]);
+                    }
                 }
             });
 

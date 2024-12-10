@@ -74,7 +74,7 @@
 
         <div class="form-group">
             {{--<label for="role_id">Роль (необязательно):</label>--}}
-            <input type="hidden" name="role_id" value="3">
+            <input type="hidden" name="role_id" value="9">
 {{--            <select name="role_id">--}}
 {{--                <option value="">Выберите роль</option>--}}
 {{--                <option value="1">Администратор</option>--}}

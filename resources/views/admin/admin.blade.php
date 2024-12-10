@@ -32,15 +32,22 @@
                 </div>
                 <!--   BEGIN LOOP -->
                 <ul>
+                    @if(!empty($allPosts))
                     @foreach($allPosts as $post)
                         <li class="row" id="site-content">
                             <div class="cell cell-50 text-center">{{$post->id}}</div>
                             <div class="cell cell-100 text-center">{{$post->postType->name ?? 'Тип не задан'}}</div>
-                            @if(!empty($post->files))
-                                <div class="cell cell-100 text-center">
-                                        <a href=""><img src="{{asset('storage/' . $post->files->first()->image) }}" alt=""
-                                                        width="50"></a>
-                                </div>
+                            @if(!empty($post->postFile))
+                                @php
+                                    $firstPostFile = $post->postFile->first(); // Получаем первое фото
+                                @endphp
+                                @if($firstPostFile && $firstPostFile->file)
+                                    <div class="cell cell-100 text-center">
+                                        <a href="">
+                                            <img src="{{ asset('storage/' . $firstPostFile->file->path) }}" alt="Post Image" width="50">
+                                        </a>
+                                    </div>
+                                @endif
                             @endif
                             <div class="cell cell-100p"><a href="">{{ $post->title }}</a></div>
                             <div class="cell cell-100p"><a
@@ -59,6 +66,7 @@
                             </div>
                         </li>
                     @endforeach
+                    @endif
 
                 </ul>
                 <!--   END LOOP -->

@@ -17,21 +17,9 @@ class Post extends Model
         'post_type_id'
     ];
 
-    public function files()
+    public function postFile()
     {
-        return $this->hasMany( File::class, 'post_id', 'id');
-    }
-
-    protected static function booted()
-    {
-        static::deleting(function ($post) {
-            // Удаляем физические файлы
-            foreach ($post->files as $file) {
-                if (Storage::disk('public')->exists($file->image)) {
-                    Storage::disk('public')->delete($file->image);
-                }
-            }
-        });
+        return $this->hasMany( PostFile::class, 'post_id', 'id');
     }
 
     public function user()
@@ -42,6 +30,28 @@ class Post extends Model
     public function postType()
     {
         return $this->belongsTo(PostType::class, 'post_type_id', 'id');
+    }
+
+    public static function booted()
+    {
+        static::deleting(function ($post) {
+            // Удаляем связанные файлы из директории
+            foreach ($post->postFile as $postFile) {
+                $file = $postFile->file;
+
+                if ($file) {
+                    // Удаляем физический файл
+                    if (Storage::disk('public')->exists($file->path)) {
+                        Storage::disk('public')->delete($file->path);
+                    }
+
+                    // Удаляем запись из таблицы files
+                    $file->delete();
+                }
+            }
+
+            // Удаляем записи в таблице post_files (происходит автоматически, если настроено каскадное удаление)
+        });
     }
 
     public function getShortContent($sentenceCount = 3)

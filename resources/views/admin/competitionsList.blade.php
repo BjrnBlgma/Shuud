@@ -30,6 +30,7 @@
                 </div>
                 <!--   BEGIN LOOP -->
                 <ul>
+                    @if(!empty($allCompetitions))
                     @foreach($allCompetitions as $post)
                         <li class="row" id="site-content">
                             <div class="cell cell-50 text-center">{{$post->id}}</div>
@@ -59,6 +60,7 @@
                             </div>
                         </li>
                     @endforeach
+                    @endif
 
                 </ul>
                 <!--   END LOOP -->

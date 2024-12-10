@@ -10,12 +10,12 @@
                 @endforeach
             </div>
 
-            @if(!empty($post->files))
+            @if(!empty($post->postFile))
                 <div class="post-images">
 
-                    @foreach($post->files as $file)
+                    @foreach($post->postFile as $file)
                         <div class="image-container">
-                            <img src="{{ asset('storage/' . $file->image) }}" alt="Post Image" class="post-image">
+                            <img src="{{ asset('storage/' . $file->file->path) }}" alt="Post Image" class="post-image">
                         </div>
                     @endforeach
                 </div>
@@ -45,11 +45,11 @@
             <div class="edit-section image-edit">
                 <label>Изображения:</label>
                 <div class="current-images">
-                    @if(!empty($post->files))
-                        @foreach($post->files as $file)
-                            <div class="image-container" data-file-id="{{ $file->id }}">
-                                <img src="{{ asset('storage/' . $file->image) }}" alt="Post Image">
-                                <button type="button" class="remove-image-btn" data-file-id="{{ $file->id }}">✕</button>
+                    @if(!empty($post->postFile))
+                        @foreach($post->postFile as $file)
+                            <div class="image-container" data-file-id="{{ $file->file->id }}">
+                                <img src="{{ asset('storage/' . $file->file->path) }}" alt="Post Image">
+                                <button type="button" class="remove-image-btn" data-file-id="{{ $file->file->id }}">✕</button>
                             </div>
                         @endforeach
                     @endif
@@ -64,6 +64,15 @@
             <input type="hidden" name="deleted_images" id="deleted-images-input" value="">
 
             <div class="edit-actions">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 <button type="submit" id="save-changes-btn" class="primary-btn">Сохранить изменения</button>
                 <button type="button" id="cancel-edit-btn" class="secondary-btn">Отмена</button>
             </div>
@@ -112,6 +121,8 @@
 
                     // Обновляем скрытое поле для передачи удаляемых изображений
                     deletedImagesInput.value = JSON.stringify(Array.from(imagesToDelete));
+
+                    console.log('Удаляемые изображения:', deletedImagesInput.value);
                 }
             }
         });

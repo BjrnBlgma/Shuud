@@ -35,9 +35,10 @@
             <div class="form-group">
                 <label for="status">Статус турнира:</label>
                 <select id="status" name="status">
-                    <option value="upcoming" {{ old('status') == 'upcoming' ? 'selected' : '' }}>Турнир запланирован (в будущем)</option>
-                    <option value="ongoing" {{ old('status') == 'ongoing' ? 'selected' : '' }}>Турнир идёт (сейчас)</option>
-                    <option value="finished" {{ old('status') == 'finished' ? 'selected' : '' }}> Турнир завершён</option>
+                    <option value="запланирован" {{ old('status') == 'запланирован' ? 'selected' : '' }}>Турнир запланирован (в будущем)</option>
+                    <option value="старт регистрации спорсменов" {{ old('status') == 'старт регистрации спорсменов' ? 'selected' : '' }}>Старт регистрации спортсменов</option>
+                    <option value="идет жеребьёвка" {{ old('status') == 'идет жеребьёвка' ? 'selected' : '' }}>Турнир идёт (сейчас)</option>
+                    <option value="завершён" {{ old('status') == 'завершён' ? 'selected' : '' }}> Турнир завершён</option>
                 </select>
             </div>
 

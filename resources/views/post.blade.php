@@ -13,12 +13,13 @@
 <body>
 <div class="container py-4">
 
-    @if(!empty($post->files))
+    @if(!empty($post->postFile))
+
     <div class="carousel">
         <div class="carousel-inner">
-            @foreach($post->files as $images)
+            @foreach($post->postFile as $file)
             <div class="carousel-item">
-                <img src="{{ asset('storage/' . $images->image) ?? 'путь_по_умолчанию.jpg' }}"  alt="Image 1">
+                <img src="{{ asset('storage/' . $file->file->path) ?? 'путь_по_умолчанию.jpg' }}"  alt="Image 1">
             </div>
             @endforeach
         </div>

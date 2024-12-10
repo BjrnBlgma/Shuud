@@ -14,14 +14,12 @@ return new class extends Migration
         Schema::create('tournament_participants', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('tournament_id');
-            $table->unsignedBigInteger('user_id'); //->nullable();
-            $table->unsignedBigInteger('guest_id');
+            $table->unsignedBigInteger('participant_id');
+            $table->string('participant_type');
             $table->boolean('is_confirmed')->default(false);
             $table->timestamps(0);
 
             $table->foreign('tournament_id')->references('id')->on('tournaments')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('guest_id')->references('id')->on('guests')->onDelete('set null');
         });
     }
 
@@ -30,6 +28,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('tournament_participants', function (Blueprint $table) {
+            $table->dropForeign('tournament_id');
+        });
         Schema::dropIfExists('tournament_participants');
     }
 };

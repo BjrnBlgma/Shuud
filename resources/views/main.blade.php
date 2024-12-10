@@ -6,12 +6,18 @@
     <a href="{{ route('news') }}" >Все новости &gt;</a>
     </nav>
     <div class="news-grid">
+        @if(!empty($posts))
         @foreach($posts as $post)
             <article class="news-item">
-                @if(!empty($post->files))
+                @if(!empty($post->postFile))
+                    @php
+                        $firstPostFile = $post->postFile->first(); // Получаем первое фото
+                    @endphp
+                    @if($firstPostFile && $firstPostFile->file)
 
-                <img src="{{ asset('storage/' . $post->files->first()->image) ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
+                <img src="{{ asset('storage/' . $firstPostFile->file->path) ?? 'путь_по_умолчанию.jpg' }}" alt="Новость 1">
 
+                    @endif
                 @endif
                 <h3>{{ $post->title }}</h3>
                 <p>{{ $post->created_at->format('d.m.Y H:i') }}</p>
@@ -19,6 +25,7 @@
                 <a href="{{ route('posts.show', $post->id) }}" class="read-more">Читать далее</a>
             </article>
         @endforeach
+        @endif
     </div>
 </section>
 

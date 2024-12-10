@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class File extends Model
 {
     protected $table = 'files';
-    protected $fillable = ['post_id', 'image'];
+    protected $fillable = ['path'];
 
-    public function post()
+    public function postFiles()
     {
-        return $this->belongsTo(Post::class, 'post_id', 'id');
+        return $this->hasMany( PostFile::class, 'file_id', 'id');
     }
 }

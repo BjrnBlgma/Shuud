@@ -23,7 +23,7 @@ class LoginController extends Controller
 
         if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
             $user = Auth::user();
-            if ($user->role_id == 1) {
+            if ($user->role_id == 1 || $user->role_id == 2 || $user->role_id == 11) {
                 return redirect()->route('admin');
             }
             return redirect()->intended('/main');
@@ -34,19 +34,19 @@ class LoginController extends Controller
     }
 
 
-    public function checkAuth()
-    {
-        if (auth()->user()) {
-            $user = auth()->user();
-            $admin = User::with("role")->findOrFail($user->id);
-            if ($admin->role->name == 'Администратор') {
-                return redirect()->route('admin');
-            } else {
-                return redirect()->route('main');
-            }
-        }
-        return redirect()->route('login');
-    }
+//    public function checkAuth()
+//    {
+//        if (auth()->user()) {
+//            $user = auth()->user();
+//            $admin = User::with("role")->findOrFail($user->id);
+//            if ($admin->role->name ==('Администратор' || 'Суперадминистратор')) {
+//                return redirect()->route('admin');
+//            } else {
+//                return redirect()->route('main');
+//            }
+//        }
+//        return redirect()->route('login');
+//    }
 
 
     public function logout(Request $request)

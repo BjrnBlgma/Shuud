@@ -44,7 +44,7 @@
             </div>
 
             <label for="image">Добавить изображение:</label>
-            <input type="file" name="image" id="image" value="{{ old('image') }}"  required>
+            <input type="file" name="image[]" id="image" required multiple>
 
             <!-- Вывод ошибок -->
             @if ($errors->any())

@@ -44,6 +44,6 @@ class RegistrationController extends Controller
         ]);
 
 
-        return redirect('/main')->with('success', 'Регистрация успешна!');
+        return redirect('/login')->with('success', 'Регистрация успешна!');
     }
 }

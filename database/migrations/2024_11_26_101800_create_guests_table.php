@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('family', 255);
             $table->string('region', 255);
             $table->string('city', 255);
-            $table->string('phone', 20);
+            $table->string('phone', 20)->unique();
+            $table->string('email', 255)->unique();
             $table->timestamps(0);
         });
     }

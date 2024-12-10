@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('role_permissions', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('role_id');
             $table->unsignedBigInteger('permission_id');
 
@@ -26,6 +27,12 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('role_permissions', function (Blueprint $table) {
+            // Удаление внешнего ключа
+            $table->dropForeign(['role_id']);
+            $table->dropForeign(['permission_id']);
+        });
+        // Удаление самой таблицы
         Schema::dropIfExists('role_permissions');
     }
 };
