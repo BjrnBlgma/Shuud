@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('post_files', function (Blueprint $table) {
+        Schema::create('tournament_files', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('post_id');
+            $table->unsignedBigInteger('tournament_id');
             $table->unsignedBigInteger('file_id');
             $table->timestamps();
-            $table->primary(['post_id', 'file_id']);
+            $table->primary(['tournament_id', 'file_id']);
 
-            $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');
+            $table->foreign('tournament_id')->references('id')->on('tournaments')->onDelete('cascade');
             $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
         });
     }
@@ -28,10 +28,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('post_files', function (Blueprint $table) {
-            $table->dropForeign('post_id');
+        Schema::table('tournament_files', function (Blueprint $table) {
+            $table->dropForeign('tournament_id');
             $table->dropForeign('file_id');
         });
-        Schema::dropIfExists('post_files');
+        Schema::dropIfExists('tournament_files');
     }
 };

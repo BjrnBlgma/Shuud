@@ -1,5 +1,10 @@
 @include('admin.headerAdmin')
-
+    <!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список постов</title>
+</head>
 
 <main role="main" id="site-content">
 
@@ -18,65 +23,108 @@
                     {{--                    <a href="" class="btnAdd fa fa-plus bg-1 text-fff"></a>--}}
                 </div>
             </div>
-            <div class="table" id="site-content">
-                <div class="row bg-1" id="site-content">
-                    <div class="cell cell-50 text-center text-fff">ID</div>
-                    <div class="cell cell-100 text-center text-fff">Тип поста</div>
-                    <div class="cell cell-100 text-fff">Изображение</div>
-                    <div class="cell cell-100p text-fff">Заголовок</div>
-                    <div class="cell cell-100p text-fff">Автор</div>
-                    <div class="cell cell-100p text-fff">Дата создания</div>
-                    <div class="cell cell-100 text-center text-fff"><input type="checkbox" class="checkbox checkAll"
-                                                                           name="statusAll" target=".status"></div>
-                    <div class="cell cell-100 text-center text-fff">Редактировать</div>
-                </div>
-                <!--   BEGIN LOOP -->
-                <ul>
+
+            <table class="tournaments-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Тип поста</th>
+                    <th>Изображение</th>
+                    <th>Заголовок</th>
+                    <th>Описание</th>
+                    <th>Автор</th>
+                    <th>Дата создания</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+
+                <tbody>
                     @if(!empty($allPosts))
                     @foreach($allPosts as $post)
-                        <li class="row" id="site-content">
-                            <div class="cell cell-50 text-center">{{$post->id}}</div>
-                            <div class="cell cell-100 text-center">{{$post->postType->name ?? 'Тип не задан'}}</div>
+                        <tr>
+                            <td>{{ $post->id }}</td>
+                            <td>{{$post->postType->name ?? ''}}</td>
+
                             @if(!empty($post->postFile))
                                 @php
                                     $firstPostFile = $post->postFile->first(); // Получаем первое фото
                                 @endphp
                                 @if($firstPostFile && $firstPostFile->file)
-                                    <div class="cell cell-100 text-center">
-                                        <a href="">
-                                            <img src="{{ asset('storage/' . $firstPostFile->file->path) }}" alt="Post Image" width="50">
-                                        </a>
-                                    </div>
+                            <td><img src="{{ asset('storage/' . $firstPostFile->file->path) }}" alt="Post Image" width="50" height="100%"></td>
                                 @endif
                             @endif
-                            <div class="cell cell-100p"><a href="">{{ $post->title }}</a></div>
-                            <div class="cell cell-100p"><a
-                                    href="">{{$post->user->surname ?? ''}} {{$post->user->name ?? ''}}</a></div>
-                            <div class="cell cell-100p text-fff">{{ $post->created_at->format('d.m.Y H:i') }}</div>
-                            <div class="cell cell-100 text-center">
-                                <input type="hidden" class="status" name="status" value="0">
-                                <input type="checkbox" class="btnSwitch status" name="status">
-                            </div>
-                            <div class="cell cell-100 text-center">
-                                <a href="{{ route('edit-post', $post->id) }}"
-                                   class="btnEdit fa fa-pencil bg-1 text-fff"></a>
-                                <a href="{{ route('delete-post', $post->id) }}"
-                                   class="btnRemove fa fa-remove bg-1 text-fff"
-                                   onclick='return confirm("Do you really want to remove it ?")'></a>
-                            </div>
-                        </li>
+                            <td>{{ $post->title }}</td>
+                            <td>{{ Str::limit($post->content, 30) }}</td>
+                            <td>{{ $post->user->surname ?? ''}} {{$post->user->name ?? ''}}</td>
+                            <td>{{ $post->created_at->format('d.m.Y H:i') }}</td>
+                            <td>
+                                <div class="cell cell-100 text-center">
+                                    <a href="{{ route('edit-post', $post->id) }}" class="btnEdit fa fa-pencil bg-1 text-fff"></a>
+                                    <a href="{{ route('delete-post', $post->id) }}" class="btnRemove fa fa-remove bg-1 text-fff" onclick="return confirm('Вы уверены?')"></a>
+                                </div>
+                            </td>
+                        </tr>
                     @endforeach
                     @endif
+                </tbody>
+            </table>
 
-                </ul>
+
                 <!--   END LOOP -->
-            </div>
+
         </form>
     </section>
-
-
 </main>
 
+
+<style>
+    .tournaments-container {
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        padding: 20px;
+        text-align: center;
+    }
+    .tournaments-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .tournaments-table th {
+        background-color: #f8f8f8;
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    .tournaments-table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+    }
+    .tournaments-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    .tournaments-table tr:hover {
+        background-color: #e8e8e8;
+    }
+    .status-active {
+        color: green;
+        font-weight: bold;
+    }
+    .status-completed {
+        color: gray;
+    }
+    .status-upcoming {
+        color: blue;
+    }
+    .status-registration{
+        color: #857a11;
+    }
+
+
+    .btnEdit, .btnRemove {
+        padding: 0.5em;
+        margin: 0 2px;
+    }
+</style>
 <style>
     @charset "UTF-8";
     @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,400italic);

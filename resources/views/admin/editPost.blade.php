@@ -22,6 +22,7 @@
             @endif
 
             <button id="edit-toggle-btn" class="primary-btn">Редактировать</button>
+            <button type="button" class="secondary-btn"  onclick="window.history.back();">Отмена</button>
         </article>
     </section>
 
@@ -211,6 +212,7 @@
     .primary-btn {
         background-color: #007bff;
         color: white;
+        margin-top: 20px;
     }
 
     .primary-btn:hover {
@@ -305,4 +307,6 @@
         justify-content: center;
         margin-top: 20px;
     }
+
+
 </style>

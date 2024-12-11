@@ -15,7 +15,7 @@ class PostController extends Controller
 {
     public function showAddPostForm(Request $request)
     {
-        if ($this->isAdmin()){
+        if (!$this->isAdmin()){
             return redirect()->route('main');
         }
         $section = $request->input('section');
@@ -26,7 +26,7 @@ class PostController extends Controller
 
     public function addPost(Request $request)
     {
-        if ($this->isAdmin()){
+        if (!$this->isAdmin()){
             return redirect()->route('main');
         }
         $validated = $request->validate([
@@ -75,7 +75,7 @@ class PostController extends Controller
 
     public function showEditPostForm($id)
     {
-        if ($this->isAdmin()){
+        if (!$this->isAdmin()){
             return redirect()->route('main');
         }
         $post = Post::with('postFile.file')->findOrFail($id);
@@ -83,9 +83,9 @@ class PostController extends Controller
     }
 
 
-    public function editPost(Request $request, $id)
+    public function updatePost(Request $request, $id)
     {
-        if ($this->isAdmin()){
+        if (!$this->isAdmin()){
             return redirect()->route('main');
         }
 
@@ -152,7 +152,7 @@ class PostController extends Controller
 
     public function deletePost($id)
     {
-        if ($this->isAdmin()){
+        if (!$this->isAdmin()){
             return redirect()->route('main');
         }
         DB::transaction(function () use ($id) {
@@ -168,13 +168,11 @@ class PostController extends Controller
     {
         if (!auth()->user()) {
             return false;
-        } else {
-            $user = auth()->user();
-            $admin = User::with("role")->findOrFail($user->id);
-            if ($admin->role->name !== 'Администратор' || $admin->role->name !== 'Суперадминистратор'){
-                return false;
-            }
         }
-        return true;
+        $user = auth()->user();
+        if ($user->role_id === 1 || $user->role_id === 2 || $user->role_id === 11){
+            return true;
+        }
+        return false;
     }
 }

@@ -21,4 +21,14 @@ class Tournament extends Model
     {
         return $this->belongsTo(User::class, 'created_user_id');
     }
+
+    public function tournamentFiles()
+    {
+        return $this->hasMany(TournamentFile::class, 'tournament_id');
+    }
+
+    public function tournamentParticipants()
+    {
+        return $this->hasMany(TournamentParticipant::class, 'tournament_id');
+    }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TournamentController;
+use App\Http\Controllers\TournamentParticipantController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,13 +35,21 @@ Route::get('/posts/{id}', [NewsController::class, 'showPost'])->name('posts.show
 //});
 
 Route::get('/admin', [AdminController::class, 'showAdminPageAndAllPosts'])->name('admin');
-Route::get('/admin/tournaments-list', [AdminController::class, 'showAllTournaments'])->name('tournaments-list');
+Route::get('/admin/tournaments-list', [TournamentController::class, 'showAllTournaments'])->name('tournaments-list');
 
 Route::get('/admin/create-post', [PostController::class, 'showAddPostForm'])->name('create-post');
 Route::post('/admin/create-post', [PostController::class, 'addPost'])->name('create-post');
 Route::get('/admin/edit-post/{id}', [PostController::class, 'showEditPostForm'])->name('edit-post');
-Route::post('/admin/edit-post/{id}', [PostController::class, 'editPost'])->name('edit-post');
+Route::post('/admin/edit-post/{id}', [PostController::class, 'updatePost'])->name('edit-post');
 Route::get('/admin/delete-post/{id}', [PostController::class, 'deletePost'])->name('delete-post');
 
 Route::get('/admin/add-tournament', [TournamentController::class, 'showAddTournamentForm'])->name('add-tournament');
 Route::post('/admin/add-tournament', [TournamentController::class, 'addTournament'])->name('add-tournament');
+Route::get('/admin/info-tournament/{id}', [TournamentController::class, 'showInfoAboutTournamentAndEditFormPage'])->name('info-tournament');
+//Route::post('/admin/update-tournament/{id}', [TournamentController::class, 'updateTournament'])->name('update-tournament');
+
+// админ сам пока добавляет у себя
+Route::get('/tournament/{tournament_id}/add-athlete', [TournamentParticipantController::class, 'showAddAthleteForm'])->name('add-athlete');
+Route::post('/tournament/{tournament_id}/add-athlete', [TournamentParticipantController::class, 'addAthlete'])->name('add-athlete');
+Route::get('tournament/{tournament_id}/list-of-participants', [TournamentParticipantController::class, 'showAllAthletes'])->name('list-of-participants');
+// гости самостоятельно регистрируются на турнир по ссылке

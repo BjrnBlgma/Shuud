@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tournament::class, 'created_user_id', 'id');
     }
+
+    public function tournamentParticipant()
+    {
+        return $this->morphMany(TournamentParticipant::class, 'participant');
+    }
 }

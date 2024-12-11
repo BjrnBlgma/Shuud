@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('guests', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->string('family', 255);
+            $table->string('surname', 255);
             $table->string('region', 255);
             $table->string('city', 255);
             $table->string('phone', 20)->unique();

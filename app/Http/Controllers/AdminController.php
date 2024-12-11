@@ -15,7 +15,7 @@ class AdminController extends Controller
 {
     public function showAdminPageAndAllPosts()
     {
-        if ($this->isAdmin()){
+        if (!$this->isAdmin()){
             return redirect()->route('main');
         }
         $allPosts = Post::with('user', 'postType', 'postFile.file')->orderBy('created_at', 'desc')->get();
@@ -23,28 +23,17 @@ class AdminController extends Controller
         return view('admin.admin', compact('allPosts', "user"));
     }
 
-    public function showAllTournaments()
-    {
-        if ($this->isAdmin()){
-            return redirect()->route('main');
-        }
-        $allCompetitions = Tournament::with('user')->orderBy('created_at', 'desc')->get();
-        $user = auth()->user();
-        return view('admin.competitionsList', compact('allCompetitions', "user"));
-    }
 
 
     private function isAdmin()
     {
         if (!auth()->user()) {
             return false;
-        } else {
-            $user = auth()->user();
-            $admin = User::with("role")->findOrFail($user->id);
-            if ($admin->role->name !== 'Администратор' || $admin->role->name !== 'Суперадминистратор'){
-                return false;
-            }
         }
-        return true;
+        $user = auth()->user();
+        if ($user->role_id === 1 || $user->role_id === 2 || $user->role_id === 11) {
+            return true;
+        }
+        return false;
     }
 }

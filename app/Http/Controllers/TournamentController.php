@@ -8,20 +8,46 @@ use Illuminate\Http\Request;
 
 class TournamentController extends Controller
 {
-    public function showAddTournamentForm()
+    public function showAllTournaments()
     {
-        if ($this->isAdmin()){
+        if (!$this->isAdmin()){
+            return redirect()->route('main');
+        }
+        $allCompetitions = Tournament::with('user', 'tournamentParticipants')->orderBy('created_at', 'desc')->get();
+        $user = auth()->user();
+        return view('admin.tournament.tournamentsTable', compact('allCompetitions', "user"));
+    }
+
+    public function showInfoAboutTournamentAndEditFormPage($id)
+    {
+        if (!$this->isAdmin()){
             return redirect()->route('main');
         }
         $user = auth()->user();
-        return view('admin.addTournament', compact('user'));
+        $tournament = Tournament::with('user', 'tournamentParticipants')->find($id);
+        return view('admin.tournament.infoAboutTournament', compact('user', 'tournament'));
+    }
+
+    public function updateTournament(Request $request, $id)
+    {
+
+    }
+
+
+    public function showAddTournamentForm()
+    {
+        if (!$this->isAdmin()){
+            return redirect()->route('main');
+        }
+        $user = auth()->user();
+        return view('admin.tournament.addTournament', compact('user'));
     }
 
 
 
     public function addTournament(Request $request)
     {
-        if ($this->isAdmin()){
+        if (!$this->isAdmin()){
             return redirect()->route('main');
         }
         $validated = $request->validate([
@@ -31,7 +57,7 @@ class TournamentController extends Controller
             'end_date' => 'nullable|date',
             'location' => 'nullable|string|max:255',
             'created_user_id' => 'required|integer|max:255',
-            'status' => 'required|in:запланирован,старт регистрации спортсменов,идет жеребьёвка,завершён',
+            'status' => 'required|in:upcoming,registration of athletes,active,completed',
         ]);
         Tournament::create([
             'name' => $validated['name'],
@@ -51,13 +77,11 @@ class TournamentController extends Controller
     {
         if (!auth()->user()) {
             return false;
-        } else {
-            $user = auth()->user();
-            $admin = User::with("role")->findOrFail($user->id);
-            if ($admin->role->name !== 'Администратор' || $admin->role->name !== 'Суперадминистратор' || $admin->role->name !== 'Создатель'){
-                return false;
-            }
         }
-        return true;
+        $user = auth()->user();
+        if ($user->role_id === 1 || $user->role_id === 2 || $user->role_id === 11){
+            return true;
+        }
+        return false;
     }
 }
