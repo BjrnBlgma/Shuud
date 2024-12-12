@@ -20,8 +20,7 @@
             <th>Дата завершения</th>
             <th>Местоположение</th>
             <th>Создатель</th>
-            <th>Дата создания</th>
-            <th>Дата изменения</th>
+            <th>Ссылка на турнир</th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -38,7 +37,7 @@
                         @case('active')
                             <span class="status-active">Активен</span>
                             @break
-                        @case('registration of athletes')
+                        @case('registration_of_athletes')
                             <span class="status-registration">Регистрация спортсменов</span>
                             @break
                         @case('completed')
@@ -51,16 +50,36 @@
                 </td>
 
                 @if(!empty($tournament->tournamentParticipants))
-                <td style="text-align: center">{{ count($tournament->tournamentParticipants) ?? '0' }}</td>
+                        <td style="text-align: center">
+                            <a href=" {{route('list-of-participants', ["tournament_id" => $tournament->id] )}}">
+                                 {{ count($tournament->tournamentParticipants) ?? '0' }}
+                            </a>
+                        </td>
                 @else
-                    <td style="text-align: center">0</td>
+                    <td style="text-align: center">
+                        <a href="{{ route('add-athlete', ["tournament_id" => $tournament->id]) }}">
+                            0
+                        </a>
+                    </td>
                 @endif
+
                 <td>{{ $tournament->start_date }}</td>
                 <td>{{ $tournament->end_date }}</td>
                 <td>{{ $tournament->location }}</td>
                 <td>{{ $tournament->user->surname ?? ''}} {{$tournament->user->name ?? ''}}</td>
-                <td>{{ $tournament->created_at->format('d.m.Y H:i') }}</td>
-                <td>{{ $tournament->updated_at->format('d.m.Y H:i') }}</td>
+                <td>
+                    @if(empty($tournament->registration_token))
+                        <form method="POST" action="{{ route('generate-registration-link', ['tournament_id' => $tournament->id]) }}">
+                            @csrf
+                            <button type="submit" class="btnAdd" style="background-color: orange; color: white;">Создать ссылку</button>
+                        </form>
+                    @else
+                        <div style="text-align: center; display: flex; flex-direction: column; gap: 1px;">
+                            <input type="text" id="registration-link" value="{{ route('register-guest', ['tournament_id' => $tournament->id, 'registration_token' => $tournament->registration_token]) }}" readonly style="width: 100%; text-align: center;">
+                            <button onclick="copyToClipboard()" class="btnAdd" style="background-color: green; color: white; margin-bottom: 5px; height: 30px; text-align: center">Скопировать ссылку</button>
+                        </div>
+                    @endif
+                </td>
                 <td>
                     <div class="cell cell-100 text-center">
                     <a href="{{ route('edit-post', $tournament->id) }}" class="btnEdit fa fa-pencil bg-1 text-fff"> Редактировать</a>
@@ -75,6 +94,17 @@
 </div>
 </body>
 </html>
+
+<script>
+    function copyToClipboard() {
+        const linkInput = document.getElementById('registration-link');
+        linkInput.select();
+        linkInput.setSelectionRange(0, 99999); // Для мобильных устройств
+        document.execCommand('copy');
+        alert('Ссылка скопирована в буфер обмена!');
+    }
+</script>
+
 
 <style>
     body {
@@ -130,5 +160,20 @@
     .btnEdit, .btnRemove {
         padding: 0.5em;
         margin: 0 2px;
+    }
+    .btnAdd {
+        padding: 10px 10px;
+        font-size: 12px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    input#registration-link {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 5px 10px;
+        font-size: 14px;
+        color: #333;
     }
 </style>

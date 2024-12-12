@@ -15,7 +15,7 @@ class TournamentParticipantController extends Controller
             return redirect()->route('main');
         }
         $tournamentId = $tournament_id;
-        return view('admin.tournament.registerGuest', compact('tournamentId'));  // вьюшка унивесальная
+        return view('admin.tournament.registerGuestFromAdmin', compact('tournamentId'));  // вьюшка унивесальная
     }
 
     public function showAllAthletes($tournament_id)
@@ -23,7 +23,10 @@ class TournamentParticipantController extends Controller
         if (!$this->isAdmin()){
             return redirect()->route('main');
         }
-        $tournament = Tournament::with('tournamentParticipants.participant')->findOrFail($tournament_id);
+//            $tournament = Tournament::with('tournamentParticipants.participant')->findOrFail($tournament_id);
+        $tournament = Tournament::with(['tournamentParticipants' => function($query) {
+            $query->orderBy('id', 'asc'); // Сортировка по возрастанию id в таблице tournamentParticipants
+        }])->findOrFail($tournament_id);
         return view('admin.tournament.participantsTable', compact('tournament'));
     }
 
@@ -42,7 +45,7 @@ class TournamentParticipantController extends Controller
             'tournament_id' => 'required|integer|exists:tournaments,id' /*required|integer|max:255*/
         ]);
         try {
-            $guest = Guest::create( $validated);
+            $guest = Guest::create($validated);
 
             TournamentParticipant::create([
                 'tournament_id'=> $validated['tournament_id'],

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Tournament;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class TournamentController extends Controller
 {
@@ -44,7 +45,6 @@ class TournamentController extends Controller
     }
 
 
-
     public function addTournament(Request $request)
     {
         if (!$this->isAdmin()){
@@ -57,7 +57,7 @@ class TournamentController extends Controller
             'end_date' => 'nullable|date',
             'location' => 'nullable|string|max:255',
             'created_user_id' => 'required|integer|max:255',
-            'status' => 'required|in:upcoming,registration of athletes,active,completed',
+            'status' => 'required|in:upcoming,registration_of_athletes,active,completed',
         ]);
         Tournament::create([
             'name' => $validated['name'],
@@ -67,9 +67,24 @@ class TournamentController extends Controller
             'location' => $validated['location'],
             'created_user_id' => $validated['created_user_id'],
             'status' => $validated['status'],
+            'registration_token' =>  Str::uuid(),
         ]);
 
         return redirect()->route('admin')->with('success', 'Новость успешно добавлена!');
+    }
+
+    public function generateRegistrationLink($tournament_id)
+    {
+        $tournament = Tournament::findOrFail($tournament_id);
+
+        if (!empty($tournament->registration_token)) {
+            return redirect()->back()->with('error', 'Ссылка уже сгенерирована!');
+        }
+
+        $tournament->registration_token = Str::uuid();
+        $tournament->save();
+
+        return redirect()->back()->with('success', 'Ссылка успешно создана!');
     }
 
 

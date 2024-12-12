@@ -14,7 +14,8 @@ class Tournament extends Model
         'end_date',
         'location',
         'created_user_id',
-        'status'
+        'status',
+        'registration_token',
     ];
 
     public function user()

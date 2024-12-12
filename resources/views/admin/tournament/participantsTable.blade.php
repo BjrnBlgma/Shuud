@@ -10,6 +10,9 @@
 <body>
 <div class="tournaments-container">
     <h1>Список участников</h1>
+    <div class="back" style="color: black; text-align: left; margin-top: -20px; margin-bottom: 20px;">
+        <a href="javascript:history.back()">&#11178; Вернуться назад</a>
+    </div>
     <table class="tournaments-table">
         <thead>
         <tr>
@@ -34,11 +37,11 @@
                     <td>{{$tournamentParticipant->participant->name}}</a></td>
                     <td>
                         @switch($tournamentParticipant->is_confirmed)
-                            @case('true')
+                            @case(true)
                                 <span class="status-true">Участие подтверждено</span>
                                 @break
-                            @case('false')
-                                <span class="status-false">Не подтвержден</span>
+                            @case(false)
+                                <span class="status-false">Участие не подтверждено</span>
                                 @break
                         @endswitch
                     </td>
@@ -111,12 +114,30 @@
     }
 
     .status-false {
-        color: yellow;
+        color: #e60000;
     }
 
 
     .btnEdit, .btnRemove {
         padding: 0.5em;
         margin: 0 2px;
+    }
+    .back {
+        text-align: left;
+        margin: 10px 0 20px 0;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .back a {
+        text-decoration: none;
+        color: black;
+        font-weight: normal;
+        display: inline-block;
+    }
+
+    .back a:hover {
+        text-decoration: underline;
+        color: blue;
     }
 </style>

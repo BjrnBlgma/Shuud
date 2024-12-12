@@ -10,7 +10,7 @@
 <div class="container">
     <h1 class="title">Регистрация для участия в турнире</h1>
 
-    <form action="{{ route('add-athlete', ["tournament_id" => $tournamentId]) }}" method="POST">
+    <form action="{{ route('register-guest', ["tournament_id" => $tournament->id, 'registration_token' => $tournament->registration_token]) }}" method="POST">
         @csrf
         <div class="form-group">
             <label for="name">Имя:</label>
@@ -42,7 +42,7 @@
             <input type="email" name="email" value="{{ old('email') }}" required>
         </div>
 
-        <input type="hidden" name="tournament_id" value="{{ $tournamentId }}">
+        <input type="hidden" name="tournament_id" value="{{ $tournament->id }}">
 
         @if ($errors->any())
             <div class="error-messages">
@@ -202,4 +202,3 @@
         }
     }
 </style>
-

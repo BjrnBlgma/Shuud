@@ -25,7 +25,7 @@
                     @case('active')
                         <span class="status-active">Активен</span>
                         @break
-                    @case('registration of athletes')
+                    @case('registration_of_athletes')
                         <span class="status-registration">Регистрация спортсменов</span>
                         @break
                     @case('completed')
@@ -77,9 +77,34 @@
     <a href="{{ route('add-athlete', ["tournament_id" => $tournament->id]) }}">
         <button id="edit-toggle-btn" class="btnAdd fa fa-plus bg-1 text-fff" style="background-color:yellowgreen; color: white "> Добавить участника</button>
     </a>
-
     @endif
+
+    <tr>
+        <td>
+            @if(empty($tournament->registration_token))
+                <form method="POST" action="{{ route('generate-registration-link', ['tournament_id' => $tournament->id]) }}">
+                    @csrf
+                    <button type="submit" class="btnAdd" style="background-color: orange; color: white;">Создать ссылку</button>
+                </form>
+            @else
+                <div style="display: flex; align-items: center; justify-content: space-between; width: 95%">
+                    <button onclick="copyToClipboard()" class="btnAdd" style="background-color: green; color: white;">Скопировать ссылку</button>
+                    <input type="text" id="registration-link" value="{{ route('register-guest', ['tournament_id' => $tournament->id, 'registration_token' => $tournament->registration_token]) }}" readonly style="margin-right: 40px; width: 70%; margin-top: 15px">
+                </div>
+            @endif
+        </td>
+    </tr>
 </div>
+
+<script>
+    function copyToClipboard() {
+        const linkInput = document.getElementById('registration-link');
+        linkInput.select();
+        linkInput.setSelectionRange(0, 99999); // Для мобильных устройств
+        document.execCommand('copy');
+        alert('Ссылка скопирована в буфер обмена!');
+    }
+</script>
 
 <style>
     body {

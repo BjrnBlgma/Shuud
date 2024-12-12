@@ -36,7 +36,7 @@
                 <label for="status">Статус турнира:</label>
                 <select id="status" name="status">
                     <option value="upcoming" {{ old('status') == 'upcoming' ? 'selected' : '' }}>Турнир запланирован (в будущем)</option>
-                    <option value="registration of athletes" {{ old('status') == 'registration of athletes' ? 'selected' : '' }}>Старт регистрации спортсменов</option>
+                    <option value="registration_of_athletes" {{ old('status') == 'registration_of_athletes' ? 'selected' : '' }}>Старт регистрации спортсменов</option>
                     <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Турнир идёт (сейчас)</option>
                     <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}> Турнир завершён</option>
                 </select>
