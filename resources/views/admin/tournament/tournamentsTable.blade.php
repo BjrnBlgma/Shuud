@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Список турниров</title>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="tournaments-container">
@@ -30,23 +31,17 @@
             @foreach($allCompetitions as $tournament)
             <tr>
                 <td>{{ $i++ }}</td>
-                <td><a href="{{ route('info-tournament', $tournament->id) }}"> {{ $tournament->name }} </a></td>
-
                 <td>
-                    @switch($tournament->status)
-                        @case('active')
-                            <span class="status-active">Активен</span>
-                            @break
-                        @case('registration_of_athletes')
-                            <span class="status-registration">Регистрация спортсменов</span>
-                            @break
-                        @case('completed')
-                            <span class="status-completed">Завершен</span>
-                            @break
-                        @case('upcoming')
-                            <span class="status-upcoming">Предстоящий</span>
-                            @break
-                    @endswitch
+                    <a href="{{ route('info-tournament', $tournament->id) }}">
+                        {{ $tournament->name }}
+                    </a>
+                </td>
+
+{{--                <td>{{ $tournament->status }}</td>--}}
+                <td>
+                    <span class="status-{{ $tournament->status }}">
+                        {{ $tournament->status_label }}
+                    </span>
                 </td>
 
                 @if(!empty($tournament->tournamentParticipants))
@@ -68,6 +63,7 @@
                 <td>{{ $tournament->location }}</td>
                 <td>{{ $tournament->user->surname ?? ''}} {{$tournament->user->name ?? ''}}</td>
                 <td>
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
                     @if(empty($tournament->registration_token))
                         <form method="POST" action="{{ route('generate-registration-link', ['tournament_id' => $tournament->id]) }}">
                             @csrf
@@ -75,14 +71,15 @@
                         </form>
                     @else
                         <div style="text-align: center; display: flex; flex-direction: column; gap: 1px;">
-                            <input type="text" id="registration-link" value="{{ route('register-guest', ['tournament_id' => $tournament->id, 'registration_token' => $tournament->registration_token]) }}" readonly style="width: 100%; text-align: center;">
-                            <button onclick="copyToClipboard()" class="btnAdd" style="background-color: green; color: white; margin-bottom: 5px; height: 30px; text-align: center">Скопировать ссылку</button>
+                            <!-- Сделать ID уникальным для каждого турнира -->
+                            <input type="text" id="registration-link-{{ $tournament->id }}" value="{{ route('register-guest', ['tournament_id' => $tournament->id, 'registration_token' => $tournament->registration_token]) }}" readonly style="width: 100%; text-align: center;">
+                            <button onclick="copyToClipboard({{ $tournament->id }})" class="btnAdd" style="background-color: green; color: white; margin-bottom: 5px; height: 30px; text-align: center">Скопировать ссылку</button>
                         </div>
                     @endif
                 </td>
                 <td>
                     <div class="cell cell-100 text-center">
-                    <a href="{{ route('edit-post', $tournament->id) }}" class="btnEdit fa fa-pencil bg-1 text-fff"> Редактировать</a>
+                    <a href="{{ route('edit-tournament', $tournament->id) }}" class="btnEdit fa fa-pencil bg-1 text-fff"> Редактировать</a>
                     <a href="{{ route('delete-post', $tournament->id) }}" class="btnRemove fa fa-remove bg-1 text-fff" onclick="return confirm('Вы уверены?')"> Удалить</a>
                     </div>
                 </td>
@@ -96,19 +93,27 @@
 </html>
 
 <script>
-    function copyToClipboard() {
-        const linkInput = document.getElementById('registration-link');
+    function copyToClipboard(tournamentId) {
+        const linkInput = document.getElementById('registration-link-' + tournamentId);
         linkInput.select();
         linkInput.setSelectionRange(0, 99999); // Для мобильных устройств
         document.execCommand('copy');
-        alert('Ссылка скопирована в буфер обмена!');
+
+        // Используем SweetAlert2 для уведомления
+        Swal.fire({
+            icon: 'success',
+            title: 'Ссылка скопирована!',
+            text: 'Теперь ссылка находится в буфере обмена.',
+            timer: 1200,  // Скрытие через 2 секунды
+            showConfirmButton: false
+        });
     }
 </script>
 
 
 <style>
     body {
-        font-family: Arial, sans-serif;
+        font-family: "Open Sans", Arial, sans-serif;
         line-height: 2;
         background-color: #f4f4f4;
         margin-left: auto;
@@ -150,10 +155,13 @@
         color: gray;
     }
     .status-upcoming {
-        color: orange;
+        color: indigo;
     }
-    .status-registration{
+    .status-registration_of_athletes{
         color: blue;
+    }
+    .status-cancelled{
+        color: red;
     }
 
 

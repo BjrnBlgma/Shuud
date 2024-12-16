@@ -1,52 +1,67 @@
 @include('admin.headerAdmin')
 
-
 <main role="main" id="site-content">
     <section class="panel important">
-        <h2>Создать турнир</h2>
-        <form action="{{ route('add-tournament') }}" method="POST">
+        <h2>Редактировать турнир</h2>
+        <form action="{{ route('edit-tournament', $tournament->id) }}" method="POST">
             @csrf
+
+            <!-- Название турнира -->
             <div class="form-group">
                 <label for="name">Название турнира:</label>
-                <input type="text" name="name" id="name" value="{{ old('name') }}" required>
+                <input type="text" name="name" id="name" value="{{ $tournament->name }}" required>
             </div>
 
+            <!-- Описание -->
             <div class="form-group">
                 <label for="description">Описание:</label>
-                <textarea id="description-editor" name="description" rows="5" style="width: 100%; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 10px">{{old('description')}}</textarea>
+                <textarea id="description-editor" name="description" rows="5" style="width: 100%; background: #f9f9f9; border: 1px solid #ddd; border-radius: 5px; padding: 10px">{{ $tournament->description }}</textarea>
+            </div>
+
+
+            <!-- Местоположение -->
+            <div class="form-group">
+                <label for="location">Местоположение:</label>
+                <input type="text" name="location" id="location" value="{{ $tournament->location }}">
+            </div>
+
+            <!-- Статус -->
+            <div class="form-group">
+                <label for="status">Статус:</label>
+                <select id="status" name="status">
+                    @foreach (App\Enums\TournamentStatus::cases() as $status)
+                        <option value="{{ $status->value }}" {{ $tournament->status === $status->value ? 'selected' : '' }}>
+                            {{ match ($status) {
+                App\Enums\TournamentStatus::REGISTRATION => 'Регистрация спортсменов',
+                App\Enums\TournamentStatus::ACTIVE => 'Активен',
+                App\Enums\TournamentStatus::COMPLETED => 'Завершён',
+                App\Enums\TournamentStatus::CANCELLED => 'Отменён',
+                App\Enums\TournamentStatus::UPCOMING => 'Запланирован',
+            } }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <div class="form-row">
                 <div class="form-group half-width">
                     <label for="start_date">Дата начала турнира:</label>
-                    <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}">
+                    <input type="date" name="end_date" id="end_date" value="{{ $tournament->start_date }}">
                 </div>
                 <div class="form-group half-width">
                     <label for="end_date">Дата завершения турнира:</label>
-                    <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}" >
+                    <input type="date" name="end_date" id="end_date" value="{{ $tournament->end_date }}">
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="location">Место проведения:</label>
-                <input type="text" name="location" id="location" value="{{ old('location') }}" >
+
+            <!-- Статичные поля -->
+            <div class="form-group" style="color: brown">
+                <label style="color: brown">Создатель:</label>
+                <p>{{ $tournament->user->surname ?? '' }} {{ $tournament->user->name ?? '' }}</p>
             </div>
 
-            <div class="form-group">
-                <label for="status">Статус турнира:</label>
-                <select id="status" name="status">
-                    <option value="upcoming" {{ old('status') == 'upcoming' ? 'selected' : '' }}>Турнир запланирован (в будущем)</option>
-                    <option value="registration_of_athletes" {{ old('status') == 'registration_of_athletes' ? 'selected' : '' }}>Старт регистрации спортсменов</option>
-                    <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Турнир идёт (сейчас)</option>
-                    <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}> Турнир завершён</option>
-                    <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}> Турнир отменен</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label class="author" for="created_user_id">Судья: {{$user->surname}} {{$user->name}}</label>
-                <input type="hidden" name="created_user_id" value="{{ $user->id }}" required>
-            </div>
+            <!-- Ошибки -->
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -57,7 +72,9 @@
                 </div>
             @endif
 
-            <button type="submit" class="btn-submit">Создать турнир</button>
+            <!-- Кнопка сохранить -->
+            <button id="save-description" style="margin-top: 10px; padding: 0.5rem 1rem; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Сохранить</button>
+
         </form>
     </section>
 </main>
@@ -66,6 +83,8 @@
     document.addEventListener("DOMContentLoaded", function() {
         const editor = document.getElementById("description-editor");
 
+        // Если текст из базы данных содержит HTML-разметку, можно использовать innerHTML
+        editor.value = `{{ $tournament->description }}`;
 
         // Функция для обработки ввода в textarea
         editor.addEventListener("keydown", function(event) {
@@ -94,10 +113,12 @@
     });
 </script>
 
+
 <style>
     @charset "UTF-8";
     @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,400italic);
     @import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css);
+
     html {
         box-sizing: border-box;
     }
@@ -119,7 +140,7 @@
         text-align: center;
         font-size: 2rem;
         margin-bottom: 1rem;
-        color: #ff1a1a;
+        color: #007bff;
     }
 
     .panel {
@@ -141,10 +162,12 @@
         margin-bottom: 0.6rem;
         color: #555;
     }
-    .author{
-        display: flex;
-        justify-content: right;
-        margin-right: 10%;
+
+    p {
+        padding: 0.6rem;
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
     }
 
     input[type="text"],
@@ -182,12 +205,6 @@
 
     .btn-submit:hover {
         background: #0056b3;
-    }
-
-    .form-group p {
-        margin: 0;
-        font-size: 0.9rem;
-        color: #666;
     }
 
     .form-row {

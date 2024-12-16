@@ -1,157 +1,268 @@
 @include('admin.headerAdmin')
 
 <!DOCTYPE html>
-<html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     @if(!empty($tournament))
         <title>{{ $tournament->name }}</title>
+    @endif
 </head>
 
-<div class="tournament-details-container">
-    <table class="tournament-details-table">
-        <tr>
-            <th>Название турнира</th>
-            <td>
-                <a href="{{ route('info-tournament', $tournament->id) }}">
-                    {{ $tournament->name }}
-                </a>
-            </td>
-        </tr>
-        <tr>
-            <th>Статус</th>
-            <td>
-                @switch($tournament->status)
-                    @case('active')
-                        <span class="status-active">Активен</span>
-                        @break
-                    @case('registration_of_athletes')
-                        <span class="status-registration">Регистрация спортсменов</span>
-                        @break
-                    @case('completed')
-                        <span class="status-completed">Завершен</span>
-                        @break
-                    @case('upcoming')
-                        <span class="status-upcoming">Предстоящий</span>
-                        @break
-                @endswitch
-            </td>
-        </tr>
-        <tr>
-            <th>Кол-во участников</th>
-            <td class="status-registration"> {{ count($tournament->tournamentParticipants) ?? '0' }}</td>
-        </tr>
-        <tr>
-            <th>Дата начала</th>
-            <td>{{ $tournament->start_date }}</td>
-        </tr>
-        <tr>
-            <th>Дата завершения</th>
-            <td>{{ $tournament->end_date }}</td>
-        </tr>
-        <tr>
-            <th>Местоположение</th>
-            <td>{{ $tournament->location }}</td>
-        </tr>
-        <tr>
-            <th>Создатель</th>
-            <td>{{ $tournament->user->surname ?? ''}} {{$tournament->user->name ?? ''}}</td>
-        </tr>
-        <tr>
-            <th>Дата создания</th>
-            <td>{{ $tournament->created_at->format('d.m.Y H:i') }}</td>
-        </tr>
-        <tr>
-            <th>Дата изменения</th>
-            <td>{{ $tournament->updated_at->format('d.m.Y H:i') }}</td>
-        </tr>
-    </table>
+<main role="main" id="site-content">
+    <section class="panel important">
+        <h2>Информация о турнире</h2>
+        <div class="form-group">
+            <label for="name">Название турнира:</label>
+            <p> {{ $tournament->name }} </p>
+        </div>
 
-{{--    @if($tournament->status === 'registration of athletes') @endif--}}
-    @if(!empty($tournament->tournamentParticipants))
-        <a href=" {{route('list-of-participants', ["tournament_id" => $tournament->id] )}}">
-            <button id="edit-toggle-btn" class="btnEdit" style="background-color:blue; color: white "> Список всех участников</button>
-        </a>
-    @endif
+        <!-- Описание -->
+        <div class="form-group">
+            <label for="description">Описание:</label>
+            <p>
+                {{ $tournament->description }}
+            </p>
+        </div>
 
-    <a href="{{ route('add-athlete', ["tournament_id" => $tournament->id]) }}">
-        <button id="edit-toggle-btn" class="btnAdd fa fa-plus bg-1 text-fff" style="background-color:yellowgreen; color: white "> Добавить участника</button>
-    </a>
-    @endif
 
-    <tr>
-        <td>
-            @if(empty($tournament->registration_token))
-                <form method="POST" action="{{ route('generate-registration-link', ['tournament_id' => $tournament->id]) }}">
-                    @csrf
-                    <button type="submit" class="btnAdd" style="background-color: orange; color: white;">Создать ссылку</button>
-                </form>
-            @else
-                <div style="display: flex; align-items: center; justify-content: space-between; width: 95%">
-                    <button onclick="copyToClipboard()" class="btnAdd" style="background-color: green; color: white;">Скопировать ссылку</button>
-                    <input type="text" id="registration-link" value="{{ route('register-guest', ['tournament_id' => $tournament->id, 'registration_token' => $tournament->registration_token]) }}" readonly style="margin-right: 40px; width: 70%; margin-top: 15px">
+        <!-- Местоположение -->
+        <div class="form-row">
+            <div class="form-row2">
+                <div class="form-group half-width2">
+                    <label for="location">Кол-во участников:</label>
+                    <p>{{ count($tournament->tournamentParticipants) ?? '0' }}</p>
                 </div>
-            @endif
-        </td>
-    </tr>
-</div>
+                <div class="form-group half-width2">
+                    @if(count($tournament->tournamentParticipants) > 0)
+                        <a href=" {{route('list-of-participants', ["tournament_id" => $tournament->id] )}}">
+                            <button id="edit-toggle-btn" class="btnEdit" style="background-color:blue; color: white; margin-top: 30px "> Список всех участников</button>
+                        </a>
+                    @else
+                    <a href="{{ route('add-athlete', ["tournament_id" => $tournament->id]) }}">
+                        <button id="edit-toggle-btn" class="btnAdd fa fa-plus bg-1 text-fff"
+                                style="background-color:yellowgreen; color: white; margin-top: 30px "> Добавить участника
+                        </button>
+                    </a>
+                    @endif
+                </div>
+            </div>
+            <div class="form-group half-width">
+                <label for="location">Местоположение:</label>
+                <p> {{ $tournament->location }} </p>
+            </div>
+        </div>
+
+        <!-- Статус -->
+        <div class="form-group" >
+            <label class="status">Статус:</label>
+            <p class="status-{{ $tournament->status }}">
+                {{ $tournament->status_label }}
+            </p>
+        </div>
+
+        <!-- Статичные поля -->
+        <div class="form-row">
+            <div class="form-group half-width">
+                <label for="start_date">Дата начала турнира:</label>
+                <p>{{ $tournament->start_date }}</p>
+            </div>
+            <div class="form-group half-width">
+                <label for="end_date">Дата завершения турнира:</label>
+                <p>{{ $tournament->end_date }}</p>
+            </div>
+        </div>
+
+        <div class="form-group" style="color: brown">
+            <label style="color: brown">Создатель:</label>
+            <p>{{ $tournament->user->surname ?? '' }} {{ $tournament->user->name ?? '' }}</p>
+        </div>
+    </section>
+    <section class="panel important" style="margin-top: -20px">
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+                @if(empty($tournament->registration_token))
+                    <form method="POST" action="{{ route('generate-registration-link', ['tournament_id' => $tournament->id]) }}">
+                        @csrf
+                        <button type="submit" class="btnAdd" style="background-color: orange; color: white;">Создать ссылку</button>
+                    </form>
+                @else
+                    <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
+                        <button onclick="copyToClipboard({{ $tournament->id }})" class="btnAdd" style="background-color: green; color: white; padding: 0.4rem ">Скопировать ссылку</button>
+                        <input type="text" id="registration-link-{{ $tournament->id }}" value="{{ route('register-guest', ['tournament_id' => $tournament->id, 'registration_token' => $tournament->registration_token]) }}" readonly style=" width: 83%;">
+                    </div>
+                @endif
+    </section>
+    <section class="panel important" style="margin-top: -20px">
+        <a href="{{ route('edit-tournament', $tournament->id) }}" class="edit-btn">
+            <button class="btnEdit fa fa-pencil bg-1 text-fff" style="background-color:#573b1d; color: white "> Редактировать информацию о турнире</button>
+        </a>
+    </section>
+</main>
+
+
 
 <script>
-    function copyToClipboard() {
-        const linkInput = document.getElementById('registration-link');
+    function copyToClipboard(tournamentId) {
+        const linkInput = document.getElementById('registration-link-' + tournamentId);
         linkInput.select();
         linkInput.setSelectionRange(0, 99999); // Для мобильных устройств
         document.execCommand('copy');
-        alert('Ссылка скопирована в буфер обмена!');
+
+        // Используем SweetAlert2 для уведомления
+        Swal.fire({
+            icon: 'success',
+            title: 'Ссылка скопирована!',
+            text: 'Теперь ссылка находится в буфере обмена.',
+            timer: 1200,  // Скрытие через 2 секунды
+            showConfirmButton: false
+        });
     }
 </script>
 
 <style>
+    @charset "UTF-8";
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,400italic);
+    @import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css);
+    html {
+        box-sizing: border-box;
+    }
+
+    *,
+    *:before,
+    *:after {
+        box-sizing: inherit;
+    }
+
     body {
-        font-family: Arial, sans-serif;
-        line-height: 2;
-        background-color: #f4f4f4;
-        margin-left: auto;
-        width: 1600px;
-        padding: 20px;
-    }
-    .tournament-details-container {
-        width: 50%;
-        margin-top: 5rem;
+        background: #f1f2f7;
+        color: darkslategray;
+        font-family: "Open Sans", Arial, sans-serif;
+        margin-left: 15%;
     }
 
-    .tournament-details-table {
-        width: 100%;
-        border-collapse: collapse;
+    h2 {
+        text-align: center;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: #ff1a1a;
     }
 
-    .tournament-details-table th{
-        border: 2px solid #ddd;
-        padding: 8px;
-        text-align: left;
-        width: 200px;
-    }
-    .tournament-details-table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
+    .panel {
+        background-color: #fff;
+        margin: 2rem auto;
+        padding: 1.2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 1000px;
     }
 
-    .tournament-details-table th {
-        background-color: #f2f2f2;
-        font-weight: bold;
+    .form-group {
+        margin-bottom: 1.4rem;
     }
-    .btnEdit, .btnAdd{
+
+    label {
         display: block;
-        margin-bottom: 5px;
-        margin-top: 20px;
-        padding: 10px 15px;
+        font-weight: bold;
+        margin-bottom: 0.4rem;
+        color: #555;
+    }
+
+    p {
+        padding: 0.4rem;
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-family: "Open Sans", Arial, sans-serif;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select {
+        width: 100%;
+        padding: 0.4rem;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background: #f9f9f9;
+        transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    select:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+    .btn-submit {
+        display: block;
+        width: 100%;
+        padding: 0.8rem;
+        font-size: 1rem;
+        color: #fff;
+        background: #007bff;
         border: none;
         border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        transition: background 0.3s ease;
     }
 
+    .btn-submit:hover {
+        background: #0056b3;
+    }
     .status-active { color: green; }
-    .status-registration { color: blue; }
+    .status-registration_of_athletes { color: blue; }
     .status-completed { color: gray; }
-    .status-upcoming { color: orange; }
+    .status-upcoming { color: indigo; }
+    .status-cancelled{ color: red; }
+
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .form-row2{
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .half-width2{
+        flex: 1;
+    }
+    .form-row2 .half-width2 input,
+    .form-row2 .half-width2 select {
+        width: 100%;
+    }
+
+    .half-width {
+        flex: 1;
+    }
+
+    .form-row .half-width input,
+    .form-row .half-width select {
+        width: 100%;
+    }
+
+    .edit-btn {
+        display: flex;
+        justify-content: right; /* Выравниваем кнопку справа */
+    }
+
+    .btnEdit {
+        padding: 1rem 2rem; /* Увеличиваем размеры кнопки */
+        font-size: 1.2rem; /* Крупный текст */
+        background-color: #573b1d;
+        color: white;
+        border: none;
+        border-radius: 8px; /* Округленные края */
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btnEdit:hover {
+        background-color: #6e4a24; /* Немного светлее при наведении */
+        transform: scale(1.05); /* Легкое увеличение */
+    }
 </style>

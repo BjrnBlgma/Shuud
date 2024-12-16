@@ -28,10 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('post_files', function (Blueprint $table) {
-            $table->dropForeign('post_id');
-            $table->dropForeign('file_id');
-        });
         Schema::dropIfExists('post_files');
     }
 };

@@ -46,8 +46,8 @@ Route::get('/admin/delete-post/{id}', [PostController::class, 'deletePost'])->na
 
 Route::get('/admin/add-tournament', [TournamentController::class, 'showAddTournamentForm'])->name('add-tournament');
 Route::post('/admin/add-tournament', [TournamentController::class, 'addTournament'])->name('add-tournament');
-Route::get('/admin/info-tournament/{id}', [TournamentController::class, 'showInfoAboutTournamentAndEditFormPage'])->name('info-tournament');
-//Route::post('/admin/update-tournament/{id}', [TournamentController::class, 'updateTournament'])->name('update-tournament');
+Route::get('/admin/info-tournament/{id}', [TournamentController::class, 'showInfoAboutTournament'])->name('info-tournament');
+
 Route::post('/tournament/{tournament_id}/generate-link', [TournamentController::class, 'generateRegistrationLink'])->name('generate-registration-link');
 
 
@@ -60,8 +60,7 @@ Route::get('tournament/{tournament_id}/list-of-participants', [TournamentPartici
 Route::get('/tournament/{tournament_id}/{registration_token}', [GuestController::class, 'showRegistrationGuestForm'])->name('register-guest');
 Route::post('/tournament/{tournament_id}/{registration_token}', [GuestController::class, 'registerGuest'])->name('register-guest');
 
-Route::get('/success', function () {
-    return view('success');
-})->name('success.page');
+Route::get('/success', function () { return view('success'); })->name('success.page');
 
-
+Route::get('/admin/edit-tournament/{id}', [TournamentController::class, 'showEditTournamentForm'])->name('edit-tournament');
+Route::post('/admin/edit-tournament/{id}', [TournamentController::class, 'updateTournament'])->name('edit-tournament');

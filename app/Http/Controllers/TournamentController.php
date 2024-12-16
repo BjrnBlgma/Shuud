@@ -7,6 +7,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+use App\Enums\TournamentStatus;
+use Illuminate\Validation\Rule;
+
 class TournamentController extends Controller
 {
     public function showAllTournaments()
@@ -19,7 +22,7 @@ class TournamentController extends Controller
         return view('admin.tournament.tournamentsTable', compact('allCompetitions', "user"));
     }
 
-    public function showInfoAboutTournamentAndEditFormPage($id)
+    public function showInfoAboutTournament($id)
     {
         if (!$this->isAdmin()){
             return redirect()->route('main');
@@ -28,12 +31,6 @@ class TournamentController extends Controller
         $tournament = Tournament::with('user', 'tournamentParticipants')->find($id);
         return view('admin.tournament.infoAboutTournament', compact('user', 'tournament'));
     }
-
-    public function updateTournament(Request $request, $id)
-    {
-
-    }
-
 
     public function showAddTournamentForm()
     {
@@ -57,7 +54,7 @@ class TournamentController extends Controller
             'end_date' => 'nullable|date',
             'location' => 'nullable|string|max:255',
             'created_user_id' => 'required|integer|max:255',
-            'status' => 'required|in:upcoming,registration_of_athletes,active,completed',
+            'status' => ['required', Rule::in(array_column(TournamentStatus::cases(), 'value'))],
         ]);
         Tournament::create([
             'name' => $validated['name'],
@@ -66,11 +63,45 @@ class TournamentController extends Controller
             'end_date' => $validated['end_date'],
             'location' => $validated['location'],
             'created_user_id' => $validated['created_user_id'],
-            'status' => $validated['status'],
+            'status' => TournamentStatus::from($validated['status']),
             'registration_token' =>  Str::uuid(),
         ]);
 
-        return redirect()->route('admin')->with('success', 'Новость успешно добавлена!');
+        return redirect()->route('tournaments-list')->with('success', 'Турнир успешно добавлен!');
+    }
+
+    public function showEditTournamentForm($id)
+    {
+        if (!$this->isAdmin()){
+            return redirect()->route('main');
+        }
+        $tournament = Tournament::findOrFail($id);
+        return view('admin.tournament.editTournament', compact('tournament'));
+    }
+
+    public function updateTournament(Request $request, $id)
+    {
+        if (!$this->isAdmin()){
+            return redirect()->route('main');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'end_date' => 'nullable|date',
+            'location' => 'nullable|string|max:255',
+            'status' => ['required', Rule::in(array_column(TournamentStatus::cases(), 'value'))],
+        ]);
+        $tournament = Tournament::findOrFail($id);
+        $tournament->update([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'end_date' => $validated['end_date'],
+            'location' => $validated['location'],
+            'status' => TournamentStatus::from($validated['status']),
+        ]);
+        $tournament->save();
+        return redirect()->route('tournaments-list')->with('success', 'Турнир успешно добавлен!');
     }
 
     public function generateRegistrationLink($tournament_id)

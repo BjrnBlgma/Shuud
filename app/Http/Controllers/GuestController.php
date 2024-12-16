@@ -7,6 +7,8 @@ use App\Models\TournamentParticipant;
 use Illuminate\Http\Request;
 use App\Models\Tournament;
 use Illuminate\Support\Str;
+use App\Enums\TournamentStatus;
+
 
 class GuestController extends Controller
 {
@@ -17,7 +19,10 @@ class GuestController extends Controller
         if (!$tournament) {
             abort(404, 'Турнир не найден или регистрация закрыта.');
         }
-        if ($tournament->status !== 'registration_of_athletes') {
+        if ($tournament->status == TournamentStatus::UPCOMING) {
+            abort(403, "Регистрация начинается за 2 дня до начала турнира!");
+        }
+        if ($tournament->status !== TournamentStatus::REGISTRATION) {
             abort(403, 'Регистрация на этот турнир закрыта.');
         }
 

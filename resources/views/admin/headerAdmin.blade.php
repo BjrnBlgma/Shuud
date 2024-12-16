@@ -119,6 +119,7 @@
         background: #f1f2f7;
         color: darkslategray;
         font-family: "Open Sans", Arial, sans-serif;
+        line-height: 2;
     }
 
     body.login {
