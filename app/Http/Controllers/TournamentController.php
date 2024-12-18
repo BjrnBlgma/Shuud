@@ -75,8 +75,9 @@ class TournamentController extends Controller
         if (!$this->isAdmin()){
             return redirect()->route('main');
         }
+        $user = auth()->user();
         $tournament = Tournament::findOrFail($id);
-        return view('admin.tournament.editTournament', compact('tournament'));
+        return view('admin.tournament.editTournament', compact('tournament', 'user'));
     }
 
     public function updateTournament(Request $request, $id)
@@ -99,6 +100,7 @@ class TournamentController extends Controller
             'end_date' => $validated['end_date'],
             'location' => $validated['location'],
             'status' => TournamentStatus::from($validated['status']),
+            'updated_at' => now()
         ]);
         $tournament->save();
         return redirect()->route('tournaments-list')->with('success', 'Турнир успешно добавлен!');

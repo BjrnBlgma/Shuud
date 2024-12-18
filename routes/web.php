@@ -12,6 +12,9 @@ use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\TournamentParticipantController;
 use App\Http\Controllers\GuestController;
 
+use App\Http\Controllers\MailController;
+
+
 Route::get('/', function () {
     return view('welcome');
 })->middleware('auth');
@@ -54,13 +57,22 @@ Route::post('/tournament/{tournament_id}/generate-link', [TournamentController::
 // админ сам пока добавляет у себя
 Route::get('/tournament/{tournament_id}/add-athlete', [TournamentParticipantController::class, 'showAddAthleteForm'])->name('add-athlete');
 Route::post('/tournament/{tournament_id}/add-athlete', [TournamentParticipantController::class, 'addAthlete'])->name('add-athlete');
-Route::get('tournament/{tournament_id}/list-of-participants', [TournamentParticipantController::class, 'showAllAthletes'])->name('list-of-participants');
+Route::get('/tournament/{tournament_id}/list-of-participants', [TournamentParticipantController::class, 'showAllAthletes'])->name('list-of-participants');
 
 // гости самостоятельно регистрируются на турнир по ссылке
-Route::get('/tournament/{tournament_id}/{registration_token}', [GuestController::class, 'showRegistrationGuestForm'])->name('register-guest');
-Route::post('/tournament/{tournament_id}/{registration_token}', [GuestController::class, 'registerGuest'])->name('register-guest');
+Route::get('/registration-in-tournament/{tournament_id}/{registration_token}', [GuestController::class, 'showRegistrationGuestForm'])->name('register-guest');
+Route::post('/registration-in-tournament/{tournament_id}/{registration_token}', [GuestController::class, 'registerGuest'])->name('register-guest');
 
 Route::get('/success', function () { return view('success'); })->name('success.page');
 
 Route::get('/admin/edit-tournament/{id}', [TournamentController::class, 'showEditTournamentForm'])->name('edit-tournament');
 Route::post('/admin/edit-tournament/{id}', [TournamentController::class, 'updateTournament'])->name('edit-tournament');
+
+Route::get('/tournament-applications/{tournament_id}', [TournamentParticipantController::class, 'showApplications'])->name('tournament-applications');
+Route::get('/tournament-applications-allow/{tournament_id}/{participant_id}', [TournamentParticipantController::class, 'allowToTournament'])->name('applications-allow');
+Route::get('/tournament-applications-deny/{tournament_id}/{participant_id}', [TournamentParticipantController::class, 'denyToParticipate'])->name('applications-deny');
+
+Route::get('sendbasicemail', [MailController::class, 'basic_email'])->name('basic_email');
+Route::get('sendhtmlemail', [MailController::class, 'html_email']);
+Route::get('sendattachmentemail', [MailController::class, 'attachment_email']);
+Route::get('basic-email', [MailController::class, 'sendBasicEmail']);

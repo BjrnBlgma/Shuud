@@ -73,8 +73,11 @@
             @endif
 
             <!-- Кнопка сохранить -->
-            <button id="save-description" style="margin-top: 10px; padding: 0.5rem 1rem; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">Сохранить</button>
+            <div class="form-group" style="display: flex; justify-content: space-between">
+            <button type="button" class="btn btn-primary" onclick="window.history.back();">Отмена</button>
 
+            <button id="save-description" class="btnEdit" style="cursor: pointer;">Сохранить</button>
+            </div>
         </form>
     </section>
 </main>
@@ -220,5 +223,27 @@
     .form-row .half-width input,
     .form-row .half-width select {
         width: 100%;
+    }
+
+    .btnEdit {
+         display: flex;
+         justify-content: right; /* Выравниваем кнопку справа */
+        margin-left: 60%;
+     }
+
+    .btnEdit {
+        padding: 1rem 2rem; /* Увеличиваем размеры кнопки */
+        font-size: 1.2rem; /* Крупный текст */
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px; /* Округленные края */
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btnEdit:hover {
+        background-color: darkblue; /* Немного светлее при наведении */
+        transform: scale(1.1 ); /* Легкое увеличение */
     }
 </style>

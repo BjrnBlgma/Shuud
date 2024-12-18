@@ -10,8 +10,14 @@
 <body>
 <div class="tournaments-container">
     <h1>Список участников</h1>
-    <div class="back" style="color: black; text-align: left; margin-top: -20px; margin-bottom: 20px;">
+    <div class="back" style="color: black; text-align: left; margin-top: -20px; margin-bottom: 20px; display: flex; justify-content: space-between ">
         <a href="javascript:history.back()">&#11178; Вернуться назад</a>
+
+        <a href="{{ route('add-athlete', ["tournament_id" => $tournament->id]) }}">
+            <button id="edit-toggle-btn" class="btnAdd fa fa-plus bg-1 text-fff"
+                    style="background-color:yellowgreen; color: white; margin-top: 30px "> Добавить участника
+            </button>
+        </a>
     </div>
     <table class="tournaments-table">
         <thead>
@@ -19,6 +25,7 @@
             <th>№</th>
             <th>Фамилия</th>
             <th>Имя</th>
+            <th>Допуск</th>
             <th>Статус</th>
             <th>Регион</th>
             <th>Город</th>
@@ -38,13 +45,15 @@
                     <td>
                         @switch($tournamentParticipant->is_confirmed)
                             @case(true)
-                                <span class="status-true">Участие подтверждено</span>
+                                <span class="status-true">Допущен</span>
                                 @break
                             @case(false)
-                                <span class="status-false">Участие не подтверждено</span>
+                                <span class="status-false">Не допущен</span>
                                 @break
                         @endswitch
                     </td>
+
+                    <td>доб столбец в табл</td>
 
                     <td>{{ $tournamentParticipant->participant->region }}</td>
                     <td>{{ $tournamentParticipant->participant->city }}</td>

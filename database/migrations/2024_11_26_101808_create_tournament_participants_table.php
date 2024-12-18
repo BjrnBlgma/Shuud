@@ -18,6 +18,16 @@ return new class extends Migration
             $table->string('participant_type');
             $table->boolean('is_confirmed')->default(false);
             $table->timestamps(0);
+            $table->enum('status', [
+                "participating",
+                "withdrawing_from_tournament",
+                "awaiting_confirmation",
+                "standby",
+                "unavailable_for_participation",
+                "requesting_a_delay",
+                "requesting_changes",
+                null
+            ])->nullable()->default(null);
 
             $table->foreign('tournament_id')->references('id')->on('tournaments')->onDelete('cascade');
         });

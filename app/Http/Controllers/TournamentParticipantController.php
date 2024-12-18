@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Guest;
 use App\Models\Tournament;
 use App\Models\TournamentParticipant;
 use Illuminate\Http\Request;
+use App\Enums\TournamentParticipantStatus;
 
 class TournamentParticipantController extends Controller
 {
@@ -14,8 +16,9 @@ class TournamentParticipantController extends Controller
         if (!$this->isAdmin()){
             return redirect()->route('main');
         }
+        $user = auth()->user();
         $tournamentId = $tournament_id;
-        return view('admin.tournament.registerGuestFromAdmin', compact('tournamentId'));  // вьюшка унивесальная
+        return view('admin.tournament.registerGuestFromAdmin', compact('tournamentId', 'user'));  // вьюшка унивесальная
     }
 
     public function showAllAthletes($tournament_id)
@@ -23,12 +26,27 @@ class TournamentParticipantController extends Controller
         if (!$this->isAdmin()){
             return redirect()->route('main');
         }
-//            $tournament = Tournament::with('tournamentParticipants.participant')->findOrFail($tournament_id);
-        $tournament = Tournament::with(['tournamentParticipants' => function($query) {
-            $query->orderBy('id', 'asc'); // Сортировка по возрастанию id в таблице tournamentParticipants
+//            $tournament = Tournament::with('tournamentParticipants.participant')->findOrFail($tournament_id);  //тоже работает код
+        $tournament = Tournament::with(['tournamentParticipants' => function ($query) {
+            $query->where('is_confirmed', true)->orderBy('id', 'asc');
         }])->findOrFail($tournament_id);
-        return view('admin.tournament.participantsTable', compact('tournament'));
+        $user = auth()->user();
+        return view('admin.tournament.participantsTable', compact('tournament', 'user'));
     }
+
+    public function showApplications($tournament_id)
+    {
+        if (!$this->isAdmin()){
+            return redirect()->route('main');
+        }
+        $tournament = Tournament::with(['tournamentParticipants.participant' => function ($query) {
+            $query->orderBy('participant_id', 'asc')->orderBy('is_confirmed', 'desc');
+        } ])->findOrFail($tournament_id);
+        $user = auth()->user();
+
+        return view('admin.tournament.listOfApplications', compact('tournament', 'user'));
+    }
+
 
     public function addAthlete(Request $request)   // создала регистацию игрока из админки, после регистрации - редиректит в админку инфы о турнире
     {
@@ -44,6 +62,8 @@ class TournamentParticipantController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'tournament_id' => 'required|integer|exists:tournaments,id' /*required|integer|max:255*/
         ]);
+
+        DB::beginTransaction();
         try {
             $guest = Guest::create($validated);
 
@@ -52,13 +72,43 @@ class TournamentParticipantController extends Controller
                 'participant_id'=> $guest->id,
                 'participant_type'=> get_class($guest),
                 'is_confirmed' => true,
+                'status' => TournamentParticipantStatus::AWAITING_CONFIRMATION
             ]);
+            DB::commit();
 
             return redirect()->route('info-tournament', $validated['tournament_id'])->with('success', 'Участник успешно добавлен!');
         } catch (\Exception $exception) {
+            DB::rollBack();
 //            \Log::error($exception->getMessage());
-            return back()->withErrors(['error' => 'Произошла ошибка при сохранении поста: ' . $exception->getMessage()])->withInput();
+            return back()->withErrors(['error' => 'Произошла ошибка: ' . $exception->getMessage()])->withInput();
         }
+    }
+
+    public function allowToTournament($tournament_id, $participant_id)
+    {
+        $tournament = TournamentParticipant::where('tournament_id', $tournament_id)
+            ->where('participant_id', $participant_id)
+            ->firstOrFail();
+        if (!empty($tournament)){
+            $tournament->update([
+                'is_confirmed' => true ,
+                'status' => TournamentParticipantStatus::AWAITING_CONFIRMATION
+                ]);
+            return redirect()->route('tournament-applications', ["tournament_id" => $tournament_id])->with('success', 'Участник допущен к участию!');
+        }
+        return back()->withErrors(['error' => 'Произошла ошибка'])->withInput();
+    }
+
+    public function denyToParticipate($tournament_id, $participant_id)
+    {
+        $tournament = TournamentParticipant::where('tournament_id', $tournament_id)
+            ->where('participant_id', $participant_id)
+            ->firstOrFail();
+        if (!empty($tournament)){
+            $tournament->update([ 'is_confirmed' => false ]);
+            return redirect()->route('tournament-applications', ["tournament_id" => $tournament_id])->with('success', 'Участник не допущен к участию!');
+        }
+        return back()->withErrors(['error' => 'Произошла ошибка'])->withInput();
     }
 
     private function isAdmin()

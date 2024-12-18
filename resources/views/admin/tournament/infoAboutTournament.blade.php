@@ -35,9 +35,21 @@
                 </div>
                 <div class="form-group half-width2">
                     @if(count($tournament->tournamentParticipants) > 0)
-                        <a href=" {{route('list-of-participants', ["tournament_id" => $tournament->id] )}}">
-                            <button id="edit-toggle-btn" class="btnEdit" style="background-color:blue; color: white; margin-top: 30px "> Список всех участников</button>
+                        <a href="{{ route('list-of-participants', ['tournament_id' => $tournament->id]) }}">
+                            <button id="edit-toggle-btn" class="btnAdd btn-spacing" style="background-color:blue; color: white; margin-top: 10px;">
+                                Список всех участников
+                            </button>
                         </a>
+
+                    <br>
+
+                        <a href="{{ route('tournament-applications', ["tournament_id" => $tournament->id] )}}" class="btnAdd">
+                            <button class="btnAdd fa fa-pencil bg-1 text-fff"
+                                    style="background-color:#573b1d; color: white "> Посмотреть заявки
+                            </button>
+                        </a>
+
+
                     @else
                     <a href="{{ route('add-athlete', ["tournament_id" => $tournament->id]) }}">
                         <button id="edit-toggle-btn" class="btnAdd fa fa-plus bg-1 text-fff"
@@ -84,7 +96,7 @@
                 @if(empty($tournament->registration_token))
                     <form method="POST" action="{{ route('generate-registration-link', ['tournament_id' => $tournament->id]) }}">
                         @csrf
-                        <button type="submit" class="btnAdd" style="background-color: orange; color: white;">Создать ссылку</button>
+                        <button type="submit" class="btnEd" style="background-color: orange; color: white;">Создать ссылку</button>
                     </form>
                 @else
                     <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
@@ -264,5 +276,9 @@
     .btnEdit:hover {
         background-color: #6e4a24; /* Немного светлее при наведении */
         transform: scale(1.05); /* Легкое увеличение */
+    }
+
+    .btn-spacing {
+        margin-bottom: 10px;
     }
 </style>

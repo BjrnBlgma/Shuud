@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Guest;
 use App\Models\TournamentParticipant;
@@ -35,7 +36,7 @@ class GuestController extends Controller
         if (!$tournament) {
             abort(404, 'Турнир не найден или регистрация закрыта.');
         }
-
+        DB::beginTransaction();
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
@@ -54,9 +55,11 @@ class GuestController extends Controller
                 'participant_type'=> get_class($guest),
                 'is_confirmed' => false,
             ]);
+            DB::commit();
 
             return redirect()->route('success.page')->with('success', 'Вы успешно зарегистрировались на турнир!');
         } catch (\Exception $exception) {
+            DB::rollBack();
 //            \Log::error($exception->getMessage());
             return back()->withErrors(['error' => 'Произошла ошибка при сохранении поста: ' . $exception->getMessage()])->withInput();
         }

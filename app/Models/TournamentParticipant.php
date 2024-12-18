@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Enums\TournamentParticipantStatus;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,6 +14,10 @@ class TournamentParticipant extends Model
         'participant_id',
         'participant_type',
         'is_confirmed'
+    ];
+
+    protected $casts = [
+        'status' => TournamentParticipantStatus::class, // Автоматически приводим к Enum
     ];
 
     public function tournament()
