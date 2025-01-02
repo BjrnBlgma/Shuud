@@ -35,7 +35,7 @@
 
     <div class="ulzy-container">
         <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-             width="50" height="50" viewBox="0 0 770.000000 960.000000"
+             width="60" height="60" viewBox="0 0 770.000000 960.000000"
              preserveAspectRatio="xMidYMid meet">
 
             <g transform="translate(0.000000,960.000000) scale(0.100000,-0.100000)"
@@ -166,9 +166,9 @@ m-3727 -463 c73 -68 156 -145 185 -173 l53 -50 -137 -123 c-75 -67 -153 -137
 350 67 64 128 117 135 117 7 0 130 -117 273 -260z"/>
             </g>
         </svg>
-        <div class="tooltip" style="text-align: center">
-            <p style="line-height: 1.4;"> © 2024 Created by Dondupova Ariana </p>
-            <p style="line-height: 1.4;"> Contact: dondupova1997@mail.ru </p>
+        <div class="tooltip" style="text-align: center; font-size: 0.9rem ">
+            <p style="line-height: 1.6;"> © 2024 Created by Dondupova Ariana </p>
+            <p style="line-height: 1.6;"> Contacts: dondupova1997@mail.ru </p>
         </div>
     </div>
 </footer>
