@@ -26,10 +26,10 @@
 {{--        alt="Новость 1">--}}
     @endif
     <h2>{{ $post->title }}</h2>
-    <p id="post">{{ $post->created_at->format('d.m.Y H:i') }}</p>
+    <p class="post_p">{{ $post->created_at->format('d.m.Y H:i') }}</p>
 
     @foreach (explode("\n", $post->content) as $paragraph)
-        <p>{{ $paragraph }}</p>
+        <p class="post_p">{{ $paragraph }}</p>
     @endforeach
 </div>
 </body>
@@ -110,10 +110,10 @@
         font-size: 2.5rem;
         color: #1a1a70; /* Цвет для заголовка */
         text-align: center;
-        margin-bottom: 1rem;
+
     }
 
-    p .post {
+    .post_p {
         font-size: 1rem;
         color: #333;
         line-height: 1.6;

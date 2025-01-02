@@ -68,6 +68,7 @@
 </header>
 
 <style>
+    @import url('https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap');
     :root {
         --primary-color: #003357;
         --secondary-color: #8B4513;
@@ -92,6 +93,7 @@
     }
 
     .header-banner {
+        font-family: 'Montserrat', sans-serif;
         width: 100%;
         height: 110px;
         background: var(--background-color);
@@ -135,6 +137,7 @@
     }
 
     .main-navigation {
+        font-family: 'Montserrat', sans-serif;
         background-color: var(--primary-color);
         padding: 1.2rem 0;
         width: 100%;

@@ -2,7 +2,6 @@
 
 <html>
 <head>
-
     <title>О федерации</title>
 </head>
 <body>
