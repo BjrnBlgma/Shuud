@@ -34,7 +34,7 @@ class PostController extends Controller
             'content' => 'required|string',
             'author_id' => 'required|integer|max:255',
             'post_type_id' => 'required|integer|max:255',
-            'image' => 'required|array', // Проверяем, что пришёл массив
+            'image' => 'array', // Проверяем, что пришёл массив
             'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Проверка каждого изображения
         ]);
         DB::beginTransaction();

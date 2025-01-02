@@ -63,10 +63,13 @@
     setInterval(goToNextSlide, 5000);
 </script>
 
+<script src="https://kit.fontawesome.com/8fe048c345.js" crossorigin="anonymous"></script>
 
 <style>
+    @import url('https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap');
+
     body {
-        font-family: 'Roboto', sans-serif;
+        font-family: 'Montserrat', sans-serif;
         background-color: #fff;
         color: #333;
         margin: 0;

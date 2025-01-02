@@ -19,7 +19,7 @@
                 <li><a href="{{ route('about') }}">О Федерации</a></li>
                 <li><a href="{{ route('news') }}">Новости</a></li>
                 <li><a href="#tournirs">Турниры</a></li>
-                <li><a href="#schools">Обучение</a></li>
+                <li><a href="#schools">Школы</a></li>
                 <li><a href="#gallery">Медиа</a></li>
                 <li><a href="#contacts">Контакты</a></li>
             </ul>
@@ -66,6 +66,9 @@
         </div>
     </nav>
 </header>
+
+
+<script src="https://kit.fontawesome.com/8fe048c345.js" crossorigin="anonymous"></script>
 
 <style>
     @import url('https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap');
