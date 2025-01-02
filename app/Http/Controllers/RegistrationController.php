@@ -30,7 +30,7 @@ class RegistrationController extends Controller
             'role_id' => 'nullable|integer|exists:roles,id',
         ]);
 
-        $user = User::create([
+        User::create([
             'name' => $validated['name'],
             'surname' => $validated['surname'],
             'patronymic' => $validated['patronymic'],

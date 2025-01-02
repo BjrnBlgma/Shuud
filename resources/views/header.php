@@ -14,52 +14,50 @@
         </div>
     </div>
     <nav class="main-navigation">
-        <div class="nav-content">
-            <ul class="nav-menu">
-                <li><a href="{{ route('about') }}">О Федерации</a></li>
-                <li><a href="{{ route('news') }}">Новости</a></li>
-                <li><a href="#tournirs">Турниры</a></li>
-                <li><a href="#schools">Обучение</a></li>
-                <li><a href="#gallery">Медиа</a></li>
-                <li><a href="#contacts">Контакты</a></li>
-            </ul>
-            <div class="login-wrapper">
-                <div id="menuToggle">
-                    <input type="checkbox" id="menuCheckbox" style="opacity: 0; width: 37px"/>
-                    <span></span>
-                    <span></span>
-                    <span></span>
+        <ul class="nav-menu">
+            <li><a href="{{ route('about') }}">О Федерации</a></li>
+            <li><a href="{{ route('news') }}">Новости</a></li>
+            <li><a href="#tournirs">Турниры</a></li>
+            <li><a href="#schools">Обучение</a></li>
+            <li><a href="#gallery">Медиа</a></li>
+            <li><a href="#contacts">Контакты</a></li>
+        </ul>
+        <div class="login-wrapper">
+            <div id="menuToggle">
+                <input type="checkbox" id="menuCheckbox" style="opacity: 0; width: 37px"/>
+                <span></span>
+                <span></span>
+                <span></span>
 
-                    <div class="login-container">
-                        <h2>Логин</h2>
-                        <form action="{{ route('login') }}" method="POST" class="login-form">
-                            @csrf
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="password">Пароль</label>
-                                <input type="password" id="password" name="password" required>
-                            </div>
-
-                            @if ($errors->any())
-                                <div class="error-messages">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-
-                            <button type="submit" class="login-button">Войти</button>
-                        </form>
-
-                        <div class="register-link">
-                            <a href="{{ route('register') }}">Зарегистрироваться</a>
+                <div class="login-container">
+                    <h2>Вход в систему</h2>
+                    <form action="{{ route('login') }}" method="POST" class="login-form">
+                        @csrf
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
                         </div>
+
+                        <div class="form-group">
+                            <label for="password">Пароль</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+
+                        @if ($errors->any())
+                        <div class="error-messages">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                        @endif
+
+                        <button type="submit" class="login-button">Войти</button>
+                    </form>
+
+                    <div class="register-link">
+                        <a href="{{ route('register') }}">Зарегистрироваться</a>
                     </div>
                 </div>
             </div>
@@ -67,34 +65,40 @@
     </nav>
 </header>
 
+
+<script>
+    const nav = document.querySelector('.main-navigation');
+    window.addEventListener("scroll", function () {
+        if (window.scrollY > 20) { // Изменено с document.documentElement.scrollTop на window.scrollY
+            nav.classList.add("sticky");
+        } else {
+            nav.classList.remove("sticky");
+        }
+    });
+</script>
+
 <style>
     :root {
         --primary-color: #003357;
         --secondary-color: #8B4513;
         --accent-color: #4A90E2;
-        --text-color: #000000;
+        --text-color: #00000;
         --background-color: #F3EFEA;
-        --max-width: 1200px;
-    }
-
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
     }
 
     body {
-        font-family: 'Montserrat', sans-serif;
-        background-color: var(--background-color);
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
         color: var(--text-color);
-        overflow-x: hidden;
-        width: 100%;
+        background-color: var(--background-color);
     }
 
+    /* Header Styles */
     .header-banner {
         width: 100%;
         height: 110px;
-        background: var(--background-color);
+        background: #F3EFEA;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -106,8 +110,7 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        max-width: var(--max-width);
-        padding: 0 2rem;
+        max-width: 1200px;
     }
 
     .federation-logo {
@@ -121,10 +124,10 @@
     }
 
     .header-titles h1 {
-        font-size: clamp(1.2rem, 2vw, 2rem);
+        font-size: 2rem;
         margin-bottom: 0.5rem;
         text-transform: uppercase;
-        letter-spacing: 2px;
+        letter-spacing: 1px;
     }
 
     .header-titles h2 {
@@ -134,34 +137,21 @@
         color: var(--primary-color);
     }
 
-    .main-navigation {
-        background-color: var(--primary-color);
-        padding: 1.2rem 0;
-        width: 100%;
+    .header-contact a {
+        color: #23346e;
+        text-decoration: none;
+        font-size: 1rem;
+        opacity: 0.8;
+        transition: opacity 0.5s;
     }
 
-    .nav-content {
-        max-width: var(--max-width);
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 2rem;
+    .header-contact a:hover {
+        opacity: 1;
     }
 
     .main-navigation {
         background-color: var(--primary-color);
         padding: 1.2rem 0;
-        position: relative;
-    }
-
-    .nav-content {
-        max-width: 1800px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: relative;
     }
 
     .nav-menu {
@@ -170,7 +160,6 @@
         list-style: none;
         margin: 0;
         padding: 0;
-        flex-grow: 1;
     }
 
     .nav-menu li {
@@ -190,18 +179,37 @@
         color: var(--accent-color);
     }
 
+    .sticky {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 999;
+        background-color: var(--primary-color);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .main-navigation.sticky + .news-section {
+        margin-top: 100px; /* Высота вашего header */
+    }
+</style>
+
+
+<style>
     .login-wrapper {
         position: relative;
-        margin-left: auto;
+        z-index: 1000;
     }
 
     #menuToggle {
         display: block;
-        position: relative;
+        position: fixed;
+        top: 130px;
+        right: 50px;
         z-index: 1000;
         -webkit-user-select: none;
         user-select: none;
-        margin-right: 50px;
+
     }
 
     #menuToggle input {
@@ -210,15 +218,15 @@
         border: 1px solid #CCCCCC;
         border-radius: 5px;
         background-color: #FAFAFA;
-        box-sizing: border-box;
+        box-sizing: border-box; /* Учитываем отступы в размере */
         display: block;
-        width: 170px;      /*ширина инпута для ввода данных*/
+
+        width: 70%;
         height: 28px;
         position: absolute;
         top: -7px;
-        right: -5px;
+        right: -5px; /* Changed from left to right */
         cursor: pointer;
-        opacity: 0;
         z-index: 2;
         -webkit-touch-callout: none;
     }
@@ -257,48 +265,28 @@
         position: absolute;
         width: 300px;
         right: -50px;
-        top: 50px;
+        top: 40px;
         padding: 2rem;
         background: white;
         border-radius: 8px;
         border: 1px solid #D4AF37;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transform: translate(100%, 0);
-        transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0), opacity 0.5s ease;
-        opacity: 0; /* Скрыто по умолчанию */
-        pointer-events: none; /* Не кликабельно */
+        transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+        pointer-events: none; /* Initially disable pointer events */
+        opacity: 0; /* Initially hide */
     }
 
     #menuToggle input:checked ~ .login-container {
         transform: none;
-        pointer-events: auto;
-        opacity: 1; /* Делает контейнер видимым */
+        pointer-events: auto; /* Enable pointer events when visible */
+        opacity: 1;
+
     }
 
-    .login-container input {
-        opacity: 1 !important; /* Убедимся, что инпуты видимы */
-        pointer-events: auto !important; /* Делаем их кликабельными */
-        width: 100%;
-    }
-
-    .sticky {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 999;
-        background-color: var(--primary-color);
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .main-navigation.sticky + .content {
-        padding-top: 60px;
-    }
-
-    /* Остальные стили для формы логина остаются без изменений */
     .login-form {
         position: relative;
-        z-index: 1001;
+        z-index: 1001; /* Ensure form is above other elements */
     }
 
     .login-container h2 {
@@ -310,7 +298,7 @@
 
     .form-group {
         margin-bottom: 1rem;
-        position: relative;
+        position: relative; /* Ensure proper stacking context */
     }
 
     .form-group label {
@@ -327,9 +315,9 @@
         border-radius: 4px;
         font-size: 1rem;
         transition: border-color 0.3s ease;
-        position: relative;
-        z-index: 1002;
-        background: white;
+        position: relative; /* Ensure proper stacking context */
+        z-index: 1002; /* Ensure inputs are clickable */
+        background: white; /* Ensure input has a background */
     }
 
     .form-group input:focus {
@@ -371,15 +359,25 @@
     .register-link a:hover {
         text-decoration: underline;
     }
+
+    .error-messages {
+        margin: 1rem 0;
+        padding: 0.75rem;
+        background: #fff5f5;
+        border: 1px solid #feb2b2;
+        border-radius: 4px;
+        color: #c53030;
+        position: relative;
+        z-index: 1001;
+    }
+
+    .error-messages ul {
+        margin: 0;
+        padding-left: 1rem;
+    }
+
+    .error-messages li {
+        font-size: 0.9rem;
+    }
 </style>
 
-<script>
-    const nav = document.querySelector('.main-navigation');
-    window.addEventListener("scroll", function () {
-        if (window.scrollY > 20) {
-            nav.classList.add("sticky");
-        } else {
-            nav.classList.remove("sticky");
-        }
-    });
-</script>

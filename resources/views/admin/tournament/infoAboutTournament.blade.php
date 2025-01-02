@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     @if(!empty($tournament))
-        <title>{{ $tournament->name }}</title>
+        <title>Инвормация о турнире "{{ $tournament->name }}"</title>
     @endif
 </head>
 

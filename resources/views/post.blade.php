@@ -4,13 +4,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Новость</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Menlo&display=swap" rel="stylesheet">
 </head>
 <body>
+
 <div class="container py-4">
 
     @if(!empty($post->postFile))
@@ -27,7 +26,7 @@
 {{--        alt="Новость 1">--}}
     @endif
     <h2>{{ $post->title }}</h2>
-    <p>{{ $post->created_at->format('d.m.Y H:i') }}</p>
+    <p id="post">{{ $post->created_at->format('d.m.Y H:i') }}</p>
 
     @foreach (explode("\n", $post->content) as $paragraph)
         <p>{{ $paragraph }}</p>
@@ -67,7 +66,7 @@
 
 <style>
     body {
-        font-family: 'Menlo', 'TT Commons Pro', 'TT Livret Text', sans-serif; /* Похожий на выбранный вами стиль шрифт */
+        font-family: 'Roboto', sans-serif;
         background-color: #fff;
         color: #333;
         margin: 0;
@@ -114,17 +113,13 @@
         margin-bottom: 1rem;
     }
 
-    p {
+    p .post {
         font-size: 1rem;
         color: #333;
         line-height: 1.6;
         margin-bottom: 1rem;
     }
 
-    /* Стили для текста с абзацами */
-    p {
-        text-align: justify;
-    }
 
 
     /* Стили для мобильных устройств */

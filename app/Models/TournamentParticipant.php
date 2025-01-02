@@ -13,7 +13,9 @@ class TournamentParticipant extends Model
         'tournament_id',
         'participant_id',
         'participant_type',
-        'is_confirmed'
+        'is_confirmed',
+        'status',
+        'uuid'
     ];
 
     protected $casts = [
@@ -28,5 +30,18 @@ class TournamentParticipant extends Model
     public function participant()
     {
         return $this->morphTo();
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        return match ($this->status) {
+            TournamentParticipantStatus::PARTICIPATING => 'Участвую',
+            TournamentParticipantStatus::WITHDRAWING_FROM_TOURNAMENT => 'Снимаюсь с турнира',
+            TournamentParticipantStatus::AWAITING_CONFIRMATION => 'Еще не решил(а)',
+            TournamentParticipantStatus::STANDBY => 'На замену, если кто-то откажется',
+            TournamentParticipantStatus::UNAVAILABLE_FOR_PARTICIPATION => 'Не смогу участвовать по уважительной причине',
+            TournamentParticipantStatus::REQUESTING_A_DELAY => 'Прошу отсрочку (для случаев, если участник хочет временно подержать за собой место - актуально в турнирах с жёсткой сеткой)',
+            TournamentParticipantStatus::REQUESTING_CHANGES => 'Запрашиваю изменение данных'
+        };
     }
 }

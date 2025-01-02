@@ -11,16 +11,6 @@
 <div class="container">
     <h1 class="title">Вход</h1>
 
-    @if ($errors->any())
-        <div class="error-messages">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <form action="{{ route('login') }}" method="POST">
         @csrf
         <label for="email">Email:</label>
@@ -28,6 +18,16 @@
 
         <label for="password">Пароль:</label>
         <input type="password" name="password" required>
+
+        @if ($errors->any())
+            <div class="error-messages">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         <button type="submit">Войти</button>
     </form>

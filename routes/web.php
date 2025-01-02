@@ -72,7 +72,9 @@ Route::get('/tournament-applications/{tournament_id}', [TournamentParticipantCon
 Route::get('/tournament-applications-allow/{tournament_id}/{participant_id}', [TournamentParticipantController::class, 'allowToTournament'])->name('applications-allow');
 Route::get('/tournament-applications-deny/{tournament_id}/{participant_id}', [TournamentParticipantController::class, 'denyToParticipate'])->name('applications-deny');
 
-Route::get('sendbasicemail', [MailController::class, 'basic_email'])->name('basic_email');
-Route::get('sendhtmlemail', [MailController::class, 'html_email']);
-Route::get('sendattachmentemail', [MailController::class, 'attachment_email']);
 Route::get('basic-email', [MailController::class, 'sendBasicEmail']);
+
+Route::get('/participant-confirm/{uuid}', [GuestController::class, 'confirmParticipation'])->name('confirm');
+Route::get('/participant-cancel/{uuid}', [GuestController::class, 'cancelParticipation'])->name('cancel');
+
+Route::get('/about', [MainController::class, 'showAboutPage'])->name('about');

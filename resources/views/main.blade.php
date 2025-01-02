@@ -1,5 +1,11 @@
 @include('header')
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+</head>
+
 <section class="news-section">
     <nav class="nav-news">
     <h2>Новости</h2>
@@ -42,6 +48,7 @@
         }
     });
 </script>
+
 
 <style>
     :root {
@@ -153,95 +160,5 @@
 
     .nav-news a:hover {
         text-decoration: underline;
-    }
-
-    /* Footer Styles */
-    footer {
-        background-color: var(--primary-color);
-        color: white;
-        padding: 2rem 1rem;
-    }
-
-    .footer-content {
-        display: flex;
-        justify-content: space-between;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .footer-col {
-        flex: 1;
-        margin: 0 1rem;
-    }
-
-    .footer-logo {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-    }
-
-    .footer-col h3 {
-        font-size: 1.2rem;
-        margin-bottom: 1rem;
-    }
-
-    .social-links {
-        display: flex;
-        justify-content: left;
-    }
-
-    .social-link {
-        display: block;
-        margin-left: 1.3rem;
-        opacity: 0.8;
-        transition: opacity 0.3s;
-    }
-
-    .social-link:hover {
-        opacity: 1;
-    }
-
-    .social-link img {
-        width: 30px;
-        height: 30px;
-        border-radius: 30%;
-    }
-
-    @media (max-width: 768px) {
-        .header-content {
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .federation-logo {
-            margin-bottom: 1rem;
-        }
-
-        .nav-menu {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .nav-menu li {
-            margin: 0.8rem 0;
-        }
-
-        .news-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .footer-content {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-
-        .footer-col {
-            margin: 1rem 0;
-        }
-
-        .social-links {
-            justify-content: center;
-        }
     }
 </style>

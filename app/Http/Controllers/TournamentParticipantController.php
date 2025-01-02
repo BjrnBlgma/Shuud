@@ -8,6 +8,8 @@ use App\Models\Tournament;
 use App\Models\TournamentParticipant;
 use Illuminate\Http\Request;
 use App\Enums\TournamentParticipantStatus;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class TournamentParticipantController extends Controller
 {
@@ -86,14 +88,30 @@ class TournamentParticipantController extends Controller
 
     public function allowToTournament($tournament_id, $participant_id)
     {
-        $tournament = TournamentParticipant::where('tournament_id', $tournament_id)
+        $participant = TournamentParticipant::where('tournament_id', $tournament_id)
             ->where('participant_id', $participant_id)
             ->firstOrFail();
-        if (!empty($tournament)){
-            $tournament->update([
+        if (!empty($participant)){
+            $participant->update([
                 'is_confirmed' => true ,
                 'status' => TournamentParticipantStatus::AWAITING_CONFIRMATION
                 ]);
+
+            if (empty($participant->uuid)) {
+                $participant->update(['uuid' => (string) Str::uuid()]);
+            }
+
+            $data = [
+                'name' => "{$participant->participant->surname} {$participant->participant->name}",
+                'link' => route('confirm', ['uuid' => $participant->uuid]),
+                ];
+
+            Mail::send(['text' => 'mail'], $data, function ($message) use ($participant) {
+                $message->to($participant->participant->email, $participant->participant->surname . ' ' . $participant->participant->name)
+                    ->subject('Вы допущены к участию!');
+                $message->from('info@shuud.ru', 'Президент ФБШ-Т Очиров Дагба');
+            });
+
             return redirect()->route('tournament-applications', ["tournament_id" => $tournament_id])->with('success', 'Участник допущен к участию!');
         }
         return back()->withErrors(['error' => 'Произошла ошибка'])->withInput();
@@ -101,11 +119,15 @@ class TournamentParticipantController extends Controller
 
     public function denyToParticipate($tournament_id, $participant_id)
     {
-        $tournament = TournamentParticipant::where('tournament_id', $tournament_id)
+        $participant = TournamentParticipant::where('tournament_id', $tournament_id)
             ->where('participant_id', $participant_id)
             ->firstOrFail();
-        if (!empty($tournament)){
-            $tournament->update([ 'is_confirmed' => false ]);
+        if (!empty($participant)){
+            $participant->update([
+                'is_confirmed' => false,
+                'status' => null,
+                'uuid' => null,
+            ]);
             return redirect()->route('tournament-applications', ["tournament_id" => $tournament_id])->with('success', 'Участник не допущен к участию!');
         }
         return back()->withErrors(['error' => 'Произошла ошибка'])->withInput();

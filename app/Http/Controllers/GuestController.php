@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Enums\TournamentParticipantStatus;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Guest;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Tournament;
 use Illuminate\Support\Str;
 use App\Enums\TournamentStatus;
+use Illuminate\Validation\Rule;
 
 
 class GuestController extends Controller
@@ -36,7 +38,6 @@ class GuestController extends Controller
         if (!$tournament) {
             abort(404, 'Турнир не найден или регистрация закрыта.');
         }
-        DB::beginTransaction();
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
@@ -46,6 +47,7 @@ class GuestController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'tournament_id' => 'required|integer|exists:tournaments,id' /*required|integer|max:255*/
         ]);
+        DB::beginTransaction();
         try {
             $guest = Guest::create( $validated);
 
@@ -63,5 +65,26 @@ class GuestController extends Controller
 //            \Log::error($exception->getMessage());
             return back()->withErrors(['error' => 'Произошла ошибка при сохранении поста: ' . $exception->getMessage()])->withInput();
         }
+    }
+
+    public function confirmParticipation($uuid)
+    {
+        $tournamentParticipant = TournamentParticipant::where('uuid', $uuid)->firstOrFail();
+
+        $tournamentParticipant->status = 'participating';
+        $tournamentParticipant->save();
+
+        return view('admin.tournament.confirm', compact('tournamentParticipant'));
+    }
+
+    public function cancelParticipation($uuid)
+    {
+        $tournamentParticipant = TournamentParticipant::where('uuid', $uuid)->firstOrFail();
+
+        $tournamentParticipant->status = 'withdrawing_from_tournament';
+        $tournamentParticipant->save();
+
+        // Возвращаем страницу отмены
+        return view('admin.tournament.cancel', compact('tournamentParticipant'));
     }
 }

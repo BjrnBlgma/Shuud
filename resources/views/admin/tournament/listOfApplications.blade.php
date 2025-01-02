@@ -8,7 +8,9 @@
 </head>
 <body>
 <div class="container">
-    <h1>Заявки на участие в турнире "{{ $tournament->name }}"</h1>
+    <h1 style="text-align: center; margin-bottom: 20px; color: #333;">
+        Заявки на участие в турнире "{{ $tournament->name }}"
+    </h1>
     <div class="back" style="color: black; text-align: left; margin-top: -20px; margin-bottom: 20px;">
         <a href="{{ route('info-tournament', $tournament->id) }}">&#11178; Вернуться назад</a>
     </div>
@@ -73,12 +75,6 @@
         background: #ffffff;
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         border-radius: 8px;
-    }
-
-    h1 {
-        text-align: center;
-        margin-bottom: 20px;
-        color: #333;
     }
 
     .tournaments-table {

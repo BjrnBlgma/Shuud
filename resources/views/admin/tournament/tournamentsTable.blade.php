@@ -27,10 +27,9 @@
         </thead>
         <tbody>
         @if(!empty($allCompetitions))
-            @php $i=1 @endphp
             @foreach($allCompetitions as $tournament)
             <tr>
-                <td>{{ $i++ }}</td>
+                <td>{{ $loop->iteration }}</td>
                 <td>
                     <a href="{{ route('info-tournament', $tournament->id) }}">
                         {{ $tournament->name }}

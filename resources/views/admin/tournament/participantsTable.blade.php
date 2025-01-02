@@ -36,10 +36,9 @@
         </thead>
         <tbody>
         @if(!empty($tournament))
-            @php $i=1 @endphp
             @foreach($tournament->tournamentParticipants as $tournamentParticipant)
                 <tr>
-                    <td>{{ $tournamentParticipant->id }}</td>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $tournamentParticipant->participant->surname }} </td>
                     <td>{{$tournamentParticipant->participant->name}}</a></td>
                     <td>
@@ -53,7 +52,7 @@
                         @endswitch
                     </td>
 
-                    <td>доб столбец в табл</td>
+                    <td>{{ $tournamentParticipant->status_label }}</td>
 
                     <td>{{ $tournamentParticipant->participant->region }}</td>
                     <td>{{ $tournamentParticipant->participant->city }}</td>

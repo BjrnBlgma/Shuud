@@ -1,5 +1,10 @@
 @include('header')
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все новости</title>
+</head>
 
 <section class="news-section">
     <nav class="nav-news">

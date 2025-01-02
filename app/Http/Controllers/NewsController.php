@@ -47,35 +47,36 @@ class NewsController extends Controller
             'image' => 'required|array', // Проверяем, что пришёл массив
             'image.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Проверка каждого изображения
         ]);
+        DB::beginTransaction();
         try {
-            DB::transaction(function () use ($validated, $request) {
-                $post = Post::create([
-                    'title' => $validated['title'],
-                    'content' => $validated['content'],
-                    'author_id' => $validated['author_id'],
-                    'post_type_id' => $validated['post_type_id'],
-                ]);
+            $post = Post::create([
+                'title' => $validated['title'],
+                'content' => $validated['content'],
+                'author_id' => $validated['author_id'],
+                'post_type_id' => $validated['post_type_id'],
+            ]);
 
-                if ($request->hasFile('image')) {
-                    foreach ($request->file('image') as $imageFile) {
-                        $path = $imageFile->store('Images', 'public');
-                        if (!$path) { // Проверяем, успешно ли сохранён файл
-                            throw new \Exception('Ошибка при сохранении файла.');
-                        }
-                        $image = File::create([
-                            'path' => $path,
-                        ]);
-
-                        PostFile::create([
-                            'post_id' => $post->id,
-                            'file_id' => $image->id,
-                        ]);
+            if ($request->hasFile('image')) {
+                foreach ($request->file('image') as $imageFile) {
+                    $path = $imageFile->store('Images', 'public');
+                    if (!$path) { // Проверяем, успешно ли сохранён файл
+                        throw new \Exception('Ошибка при сохранении файла.');
                     }
+                    $image = File::create([
+                        'path' => $path,
+                    ]);
+
+                    PostFile::create([
+                        'post_id' => $post->id,
+                        'file_id' => $image->id,
+                    ]);
                 }
-            });
+            }
+            DB::commit();
 
             return redirect()->route('news')->with('success', 'Новость успешно добавлена!');
         } catch (\Exception $exception) {
+            DB::rollBack();
             return back()->with('error', 'Произошла ошибка при сохранении поста. Попробуйте снова.');
         }
     }
