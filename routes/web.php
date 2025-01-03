@@ -78,3 +78,5 @@ Route::get('/participant-confirm/{uuid}', [GuestController::class, 'confirmParti
 Route::get('/participant-cancel/{uuid}', [GuestController::class, 'cancelParticipation'])->name('cancel');
 
 Route::get('/about', [MainController::class, 'showAboutPage'])->name('about');
+Route::get('/history', [MainController::class, 'showHistoryPage'])->name('history');
+Route::get('/rules', [MainController::class, 'showRulesPage'])->name('rules');

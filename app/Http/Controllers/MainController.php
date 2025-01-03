@@ -20,4 +20,14 @@ class MainController extends Controller
     {
         return view('aboutFBShT');
     }
+
+    public function showHistoryPage()
+    {
+        return view('history');
+    }
+
+    public function showRulesPage()
+    {
+        return view('rules');
+    }
 }

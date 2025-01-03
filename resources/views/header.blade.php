@@ -16,7 +16,22 @@
     <nav class="main-navigation">
         <div class="nav-content">
             <ul class="nav-menu">
-                <li><a href="{{ route('about') }}">О Федерации</a></li>
+
+                <li class="menu__item">
+                    <a href="#" class="menu__link">О Федерации</a>
+                    <ul class="menu menu_sub">
+                        <li class="menu__item">
+                            <a href="{{ route('about') }}" class="menu__link">• О нас</a>
+                        </li>
+                        <li class="menu__item">
+                            <a href="{{ route('history') }}" class="menu__link">• История федерации</a>
+                        </li>
+                        <li class="menu__item">
+                            <a href="{{ route('rules') }}" class="menu__link">• Правила игры</a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li><a href="{{ route('news') }}">Новости</a></li>
                 <li><a href="#tournirs">Турниры</a></li>
                 <li><a href="#schools">Школы</a></li>
@@ -69,6 +84,33 @@
 
 
 <script src="https://kit.fontawesome.com/8fe048c345.js" crossorigin="anonymous"></script>
+<script>
+    // объявление переменных
+    const menuLink = Array.from(document.querySelectorAll('.menu__link'));
+    let lastActiveMenu;
+    // проходим по циклу
+    for (let i = 0; i < menuLink.length; i++) {
+        // наззначаем событие клика на меню
+        menuLink[i].onclick = function () {
+            // создаем саб меню и указываем на ближайший родительский элемент
+            const menuSub = this.closest('.menu__item').querySelector('.menu_sub');
+            // условие
+            if (menuSub) {
+                // если сабменю не равно двум активных меню то удаляем класс
+                if (menuSub != lastActiveMenu && lastActiveMenu) {
+                    lastActiveMenu.classList.remove('menu_active');
+                }
+                // переключаем на активный
+                menuSub.classList.toggle('menu_active');
+                // последнее активное меню присваиваем менюСаб
+                lastActiveMenu = menuSub;
+                //возврат на предовтращение
+                return false;
+            }
+        };
+    }
+</script>
+
 
 <style>
     @import url('https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap');
@@ -130,6 +172,7 @@
         margin-bottom: 0.5rem;
         text-transform: uppercase;
         letter-spacing: 2px;
+        color: var(--primary-color);
     }
 
     .header-titles h2 {
@@ -181,6 +224,7 @@
 
     .nav-menu li {
         margin: 0 4rem;
+        position: relative; /* Важно для позиционирования подменю */
     }
 
     .nav-menu a {
@@ -376,6 +420,101 @@
 
     .register-link a:hover {
         text-decoration: underline;
+    }
+
+
+    /* стили для подменю */
+    .menu {
+        display: flex;
+        list-style-type: none;
+        justify-content: space-around;
+        background: var(--primary-color);
+        box-sizing: border-box;
+        padding: 10px 10px;
+        margin: 10px;
+    }
+    .menu__link {
+        text-decoration: none;
+        color: #000;
+    }
+
+    .menu__link:hover {
+        color: whitesmoke;
+    }
+
+    .menu__item {
+        position: relative;
+    }
+
+    .menu_sub {
+        display: none;
+        position: absolute;
+        left: 50%; /* Центрирование относительно родителя */
+        transform: translateX(-40%); /* Точное центрирование */
+        background: var(--primary-color);
+        min-width: 260px; /* Фиксированная минимальная ширина */
+        /*border: 1px solid #D4AF37; !* Золотая граница *!*/
+        /* Можно убрать некоторые границы, раскомментировав строку ниже */
+        border-width: 1px 0 0 0;
+
+        /* Отступы подменю - можно регулировать по необходимости */
+        padding: 0.1rem 0; /* Верхний и нижний отступ */
+        margin-top: 1.2rem; /* Отступ от основного меню */
+    }
+
+    /* Стили для пунктов подменю */
+    .menu_sub .menu__item {
+        margin: 0;
+        padding: 0.5rem 1rem; /* Внутренние отступы пунктов - можно регулировать */
+        text-align: left;
+        position: relative;
+    }
+
+    /* Ссылки в подменю */
+    .menu_sub .menu__link {
+        font-size: 1rem; /* Уменьшенный размер шрифта */
+        white-space: nowrap;
+        display: block;
+        padding: 0.3rem 0;
+    }
+
+    /* Активное состояние подменю */
+    .menu_active {
+        display: block;
+    }
+
+    /* Стили для мобильных устройств */
+    @media (max-width: 768px) {
+        /* Вариант 1: Подменю под пунктом (раскомментируйте для использования) */
+        /*
+        .menu_sub {
+            position: static;
+            transform: none;
+            width: 100%;
+            margin-top: 0.5rem;
+            border-width: 1px 0;
+        }
+        */
+
+        /* Вариант 2: Подменю с отступом слева */
+        .menu_sub {
+            position: static;
+            transform: none;
+            width: calc(100% - 2rem);
+            margin-left: 2rem;
+            margin-top: 0.5rem;
+            border-left: 2px solid #D4AF37;
+        }
+
+        .nav-menu {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .nav-menu li {
+            margin: 0.5rem 0;
+            width: 100%;
+        }
     }
 </style>
 

@@ -23,7 +23,7 @@
             @endforeach
         </div>
     </div>
-{{--        alt="Новость 1">--}}
+
     @endif
     <h2>{{ $post->title }}</h2>
     <p class="post_p">{{ $post->created_at->format('d.m.Y H:i') }}</p>

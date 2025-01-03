@@ -7,7 +7,7 @@
 <body>
 
 <main class="main-grid">
-    <div class="head" style="display: flex; align-items: center; justify-content: space-between; width: 100%">
+    <div class="headAbout" style="display: flex; align-items: center; justify-content: space-between; width: 100%">
         <div>
             <img src="https://i.pinimg.com/736x/a1/6b/a4/a16ba4b39ed3a448a699ce3d2be0c829.jpg" alt="Логотип Федерации"
                  class="logo" style="width: 300px; height: 300px; border-radius: 50%;">
@@ -73,9 +73,10 @@
         grid-template-columns: 1fr minmax(0, 2fr);
         gap: 2rem;
         padding: 2rem;
+        align-items: center; /* Выравнивает элементы по центру по вертикали */
     }
 
-    .head {
+    .headAbout {
         grid-column: 1 / -1;
         display: flex;
         align-items: center;
@@ -89,7 +90,13 @@
         height: auto;
         object-fit: cover;
         box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.2);
-        margin-top: 1.3em;
+        display: block;
+        margin: 0 auto; /* Центрирует изображение по горизонтали */
+    }
+    .main-grid > div:first-child {
+        display: flex;
+        align-items: center; /* Центрирует изображение по вертикали */
+        justify-content: center; /* Центрирует изображение по горизонтали */
     }
 
     .main-text {
@@ -116,7 +123,7 @@
             grid-template-columns: 1fr;
         }
 
-        .head {
+        .headAbout {
             flex-direction: column;
             text-align: center;
         }
